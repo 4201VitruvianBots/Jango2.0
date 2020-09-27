@@ -27,6 +27,18 @@ import frc.robot.constants.Constants;
 Susbsystem for interacting with the robot's indexer (feeds balls from intake to shooter)
  */
 
+/*
+Motor directions:
+
+-Two motors: front and back motor
+  Front motor: always runs up (clockwise)
+  Back motor: runs down (counterclockwise)
+
+-Moving balls up:
+  Front motor spins up (clockwise)
+  Back motor spins up (counterclockwise)
+ */
+
 public class Indexer extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
