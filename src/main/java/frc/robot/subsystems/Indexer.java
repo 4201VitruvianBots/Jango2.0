@@ -36,7 +36,7 @@ Motor directions:
 
 -Moving balls up:
   Front motor spins up (clockwise)
-  Back motor spins up (counterclockwise)
+  Back motor spins up (clockwise)
  */
 
 public class Indexer extends SubsystemBase {
