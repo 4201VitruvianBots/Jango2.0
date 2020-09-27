@@ -45,9 +45,10 @@ public class Indexer extends SubsystemBase {
    */
 
   // Setup indexer motor controller (SparkMax)
-  CANSparkMax master = new CANSparkMax(Constants.indexerMotor, MotorType.kBrushless);
-  CANEncoder encoder = master.getEncoder();
-  CANPIDController pidController = master.getPIDController();
+  CANSparkMax frontMaster = new CANSparkMax(Constants.indexerMotorFront, MotorType.kBrushless);
+  CANSparkMax backMaster = new CANSparkMax(Constants.indexerMotorBack, MotorType.kBrushless);
+  CANEncoder encoder = frontMaster.getEncoder();
+  CANPIDController pidController = frontMaster.getPIDController();
 
   VictorSPX kicker = new VictorSPX(Constants.kickerMotor);
 
@@ -78,10 +79,10 @@ public class Indexer extends SubsystemBase {
 
   public Indexer() {
     // Motor and PID controller setup
-    master.restoreFactoryDefaults();
-    master.setInverted(false);
+    frontMaster.restoreFactoryDefaults();
+    frontMaster.setInverted(false);
 
-    master.setIdleMode(IdleMode.kBrake);
+    frontMaster.setIdleMode(IdleMode.kBrake);
 
     pidController.setFF(kF);
     pidController.setP(kP);
@@ -130,7 +131,7 @@ public class Indexer extends SubsystemBase {
   }
 
   public void setIndexerOutput(double output) {
-    master.set(output);
+    frontMaster.set(output);
   }
 
   // Detect whether a new ball has been picked up
