@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import sun.text.bidi.BracketData;
 
 /*
 Susbsystem for interacting with the robot's indexer (feeds balls from intake to shooter)
@@ -45,10 +46,12 @@ public class Indexer extends SubsystemBase {
    */
 
   // Setup indexer motor controller (SparkMax)
-  CANSparkMax frontMaster = new CANSparkMax(Constants.indexerMotorFront, MotorType.kBrushless);
-  CANSparkMax backMaster = new CANSparkMax(Constants.indexerMotorBack, MotorType.kBrushless);
-  CANEncoder encoder = frontMaster.getEncoder();
-  CANPIDController pidController = frontMaster.getPIDController();
+  CANSparkMax front = new CANSparkMax(Constants.indexerMotorFront, MotorType.kBrushless);
+  CANSparkMax back = new CANSparkMax(Constants.indexerMotorBack, MotorType.kBrushless);
+  CANEncoder encoder = front.getEncoder();
+  CANEncoder encoder2 = back.getEncoder();
+  CANPIDController pidController = front.getPIDController();
+  CANPIDController pidController2 = back.getPIDController();
 
   VictorSPX kicker = new VictorSPX(Constants.kickerMotor);
 
@@ -79,10 +82,13 @@ public class Indexer extends SubsystemBase {
 
   public Indexer() {
     // Motor and PID controller setup
-    frontMaster.restoreFactoryDefaults();
-    frontMaster.setInverted(false);
+    front.restoreFactoryDefaults();
+    back.restoreFactoryDefaults();
+    front.setInverted(false);
+    back.setInverted(false);
 
-    frontMaster.setIdleMode(IdleMode.kBrake);
+    front.setIdleMode(IdleMode.kBrake);
+    back.setIdleMode(IdleMode.kBrake);
 
     pidController.setFF(kF);
     pidController.setP(kP);
@@ -92,6 +98,15 @@ public class Indexer extends SubsystemBase {
     pidController.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
     pidController.setSmartMotionAllowedClosedLoopError(1, 0);
     pidController.setIZone(kI_Zone);
+
+    pidController2.setFF(kF);
+    pidController2.setP(kP);
+    pidController2.setI(kI);
+    pidController2.setD(kD);
+    pidController2.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
+    pidController2.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
+    pidController2.setSmartMotionAllowedClosedLoopError(1, 0);
+    pidController2.setIZone(kI_Zone);
 
     kicker.configFactoryDefault();
     kicker.setInverted(true);
@@ -131,7 +146,8 @@ public class Indexer extends SubsystemBase {
   }
 
   public void setIndexerOutput(double output) {
-    frontMaster.set(output);
+    front.set(output);
+    back.set(output);
   }
 
   // Detect whether a new ball has been picked up
