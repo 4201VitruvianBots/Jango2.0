@@ -17,6 +17,11 @@ import frc.robot.constants.Constants;
 Subsystem for interacting with the robot's intake
  */
 
+/*
+Two pistons
+Motor: Falcon500
+ */
+
 public class Intake extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
