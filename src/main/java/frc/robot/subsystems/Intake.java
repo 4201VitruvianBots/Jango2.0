@@ -1,10 +1,13 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,49 +16,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.Constants;
 
-/*
-Subsystem for interacting with the robot's intake
- */
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase {
+public class intake extends SubsystemBase {
   /**
-   * Creates a new ExampleSubsystem.
+   * Creates a new intake.
    */
-  // PID and FeedForward loop terms
-  private double kFF = 0.00068; //0.06; //0.122
-  private double kP = 6e-5; //0.492
-  private double kI = 0;
-  private double kD = 0;
-
-  private double kI_Zone = 0;
-  private double allowableError = 50;
-  private double maxVel = 5880;
-  private double maxAccel = 58800;
-  private double gearRatio = 1.0 / 3.0;
-  private boolean intaking = false;
-
-  // Intake motor setup
-  private CANSparkMax intakeMotor =  new CANSparkMax(Constants.intakeMotor, MotorType.kBrushless);
-//  private CANEncoder intakeEncoder = intakeMotor.getEncoder();
-//  private CANPIDController canPidController = intakeMotor.getPIDController();
-
+  private TalonFX intakeMotor =  new TalonFX(Constants.intakeMotor, MotorType.kBrushless);
   DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
-
-  public Intake() {
+  private boolean intaking = false;
+  public intake() {
     intakeMotor.restoreFactoryDefaults();
-    intakeMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    intakeMotor.setIdleMode(TalonFX.IdleMode.kBrake);
     intakeMotor.setInverted(false);
 
-//    canPidController.setFF(kFF);
-//    canPidController.setP(kP);
-//    canPidController.setI(kI);
-//    canPidController.setIZone(kI_Zone);
-//    canPidController.setD(kD);
-//    canPidController.setSmartMotionMaxVelocity(maxVel, 0);
-//    canPidController.setSmartMotionMaxAccel(maxAccel, 0);
-//    canPidController.setSmartMotionAllowedClosedLoopError(allowableError, 0);
   }
-
   public boolean getIntakingState() {
     return intaking;
   }
@@ -70,30 +45,16 @@ public class Intake extends SubsystemBase {
   public void setintakePiston(boolean state){
     intakePiston.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
   }
-
   public void setIntakePercentOutput(double value){
     intakeMotor.set(value);
   }
-
-//  public double getRPM(){
-//    return intakeEncoder.getVelocity() * gearRatio;
-//  }
-//
-//  public void setDirectRPM(double rpm){
-//    canPidController.setReference(rpm, ControlType.kSmartVelocity);
-//  }
-//
-//  public void setRPM(double rpm){
-//    double setpoint =  rpm / gearRatio;
-//    canPidController.setReference(setpoint, ControlType.kSmartVelocity);
-//  }
-
   private void updateSmartDashboard() {
     SmartDashboardTab.putBoolean("Intake", "Intake State", getIntakingState());
     SmartDashboardTab.putBoolean("Intake", "Pistons", getIntakePistonExtendStatus());
   }
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     updateSmartDashboard();
   }
 }
