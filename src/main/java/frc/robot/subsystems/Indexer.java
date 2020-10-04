@@ -10,9 +10,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+// import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+// import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -50,8 +50,8 @@ public class Indexer extends SubsystemBase {
   CANSparkMax back = new CANSparkMax(Constants.indexerMotorBack, MotorType.kBrushless);
   CANEncoder encoderFront = front.getEncoder();
   CANEncoder encoderBack = back.getEncoder();
-  CANPIDController pidControllerFront = front.getPIDController();
-  CANPIDController pidControllerBack = back.getPIDController();
+  // CANPIDController pidControllerFront = front.getPIDController();
+  // CANPIDController pidControllerBack = back.getPIDController();
 
   VictorSPX kicker = new VictorSPX(Constants.kickerMotor);
 
@@ -67,14 +67,14 @@ public class Indexer extends SubsystemBase {
 //  private double kP = 2.36;
 //  private double kI = 0;
 //  private double kD = 1070;
-  private double kF = 0.0001;
-  private double kP = 0.000001;
-  private double kI = 80;
-  private double kD = 0.0001;
+//   private double kF = 0.0001;
+//   private double kP = 0.000001;
+//   private double kI = 80;
+//   private double kD = 0.0001;
 
-  private double kI_Zone = 1;
-  private double maxVel = 1.1e4;
-  private double maxAccel = 1e6;
+//   private double kI_Zone = 1;
+//   private double maxVel = 1.1e4;
+//   private double maxAccel = 1e6;
 
   private double gearRatio = 1.0 / 27.0;
 
@@ -90,23 +90,23 @@ public class Indexer extends SubsystemBase {
     front.setIdleMode(IdleMode.kBrake);
     back.setIdleMode(IdleMode.kBrake);
 
-    pidControllerFront.setFF(kF);
-    pidControllerFront.setP(kP);
-    pidControllerFront.setI(kI);
-    pidControllerFront.setD(kD);
-    pidControllerFront.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
-    pidControllerFront.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
-    pidControllerFront.setSmartMotionAllowedClosedLoopError(1, 0);
-    pidControllerFront.setIZone(kI_Zone);
+    // pidControllerFront.setFF(kF);
+    // pidControllerFront.setP(kP);
+    // pidControllerFront.setI(kI);
+    // pidControllerFront.setD(kD);
+    // pidControllerFront.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
+    // pidControllerFront.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
+    // pidControllerFront.setSmartMotionAllowedClosedLoopError(1, 0);
+    // pidControllerFront.setIZone(kI_Zone);
 
-    pidControllerBack.setFF(kF);
-    pidControllerBack.setP(kP);
-    pidControllerBack.setI(kI);
-    pidControllerBack.setD(kD);
-    pidControllerBack.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
-    pidControllerBack.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
-    pidControllerBack.setSmartMotionAllowedClosedLoopError(1, 0);
-    pidControllerBack.setIZone(kI_Zone);
+    // pidControllerBack.setFF(kF);
+    // pidControllerBack.setP(kP);
+    // pidControllerBack.setI(kI);
+    // pidControllerBack.setD(kD);
+    // pidControllerBack.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
+    // pidControllerBack.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
+    // pidControllerBack.setSmartMotionAllowedClosedLoopError(1, 0);
+    // pidControllerBack.setIZone(kI_Zone);
 
     kicker.configFactoryDefault();
     kicker.setInverted(true);
@@ -178,8 +178,8 @@ public class Indexer extends SubsystemBase {
   public void setRPM(double rpm) {
     double setpoint = rpm / gearRatio;
     SmartDashboard.putNumber("Indexer Setpoint", setpoint);
-    pidControllerFront.setReference(setpoint, ControlType.kSmartVelocity);
-    pidControllerBack.setReference(setpoint, ControlType.kSmartVelocity);
+    // pidControllerFront.setReference(setpoint, ControlType.kSmartVelocity);
+    // pidControllerBack.setReference(setpoint, ControlType.kSmartVelocity);
   }
 //
 //  public void resetEncoderPosition(){
@@ -215,21 +215,21 @@ public class Indexer extends SubsystemBase {
 
   }
 
-  private void updatePIDValues() {
-    // Allow PID values to be set through SmartDashboard
-    kF = SmartDashboard.getNumber("kF", 0);
-    kP = SmartDashboard.getNumber("kP", 0);
-    kI = SmartDashboard.getNumber("kI", 0);
-    kD = SmartDashboard.getNumber("kD", 0);
-    pidControllerFront.setFF(kF);
-    pidControllerFront.setP(kP);
-    pidControllerFront.setI(kI);
-    pidControllerFront.setD(kD);
-    pidControllerBack.setFF(kF);
-    pidControllerBack.setP(kP);
-    pidControllerBack.setI(kI);
-    pidControllerBack.setD(kD);
-  }
+  // private void updatePIDValues() {
+  //   // Allow PID values to be set through SmartDashboard
+  //   kF = SmartDashboard.getNumber("kF", 0);
+  //   kP = SmartDashboard.getNumber("kP", 0);
+  //   kI = SmartDashboard.getNumber("kI", 0);
+  //   kD = SmartDashboard.getNumber("kD", 0);
+  //   pidControllerFront.setFF(kF);
+  //   pidControllerFront.setP(kP);
+  //   pidControllerFront.setI(kI);
+  //   pidControllerFront.setD(kD);
+  //   pidControllerBack.setFF(kF);
+  //   pidControllerBack.setP(kP);
+  //   pidControllerBack.setI(kI);
+  //   pidControllerBack.setD(kD);
+  // }
 
   @Override
   public void periodic() {
