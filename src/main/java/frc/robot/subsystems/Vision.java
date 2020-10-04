@@ -141,7 +141,7 @@ public class Vision extends SubsystemBase {
 				xDistance += 29.25 / 12.0;
 				return innerTargetXFilter.calculate(Math.signum(getFilteredTargetX()) * Units.radiansToDegrees(Math.atan(xDistance / yDistance)));
 			}
-		}
+		}//recalibrates the distance from target based on the current position of the bot??
 
 		return getFilteredTargetX();
 	}
@@ -161,7 +161,7 @@ public class Vision extends SubsystemBase {
 			}
 		} else if(resetPose && !hasTarget()) {
 			resetPose = false;
-		}
+		}//resets pose of bot based on the vision of the bot
 	}
 
 	// More Limelight interaction functions

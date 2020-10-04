@@ -123,7 +123,7 @@ public class Turret extends SubsystemBase {
         return !turretHomeSensor.get();
     }
 
-    public boolean getInitialHome() {
+    public boolean getInitialHome() { //Checks if the bot is in its starting position??
         return initialHome;
     }
 

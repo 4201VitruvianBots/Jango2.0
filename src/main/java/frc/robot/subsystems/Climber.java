@@ -46,18 +46,18 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean getClimbPistonExtendStatus(){
-    return climbPiston.get() == DoubleSolenoid.Value.kForward ? true : false;
+    return climbPiston.get() == DoubleSolenoid.Value.kForward ? true : false; //Gives the ClimbPistonExtendStatus if the climbPiston value equals the value of forward speed??
   }
 
   public void setClimbPiston(boolean state){
-    climbPiston.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+    climbPiston.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse); //sets values based on the ClimbPiston State
   }
 
   public boolean getClimbState() {
     return climbState;
   }
 
-  public void setClimbState(boolean climbState) {
+  public void setClimbState(boolean climbState) {//getting climbstate based on the actual climbstate
     this.climbState = climbState;
   }
 
@@ -70,17 +70,17 @@ public class Climber extends SubsystemBase {
 	  return climbMotor.getSelectedSensorPosition();
   }
 
-  public void setClimberPosition(double position) {
+  public void setClimberPosition(double position) { //sets and configures the ClimberPosition
     double setpoint = inchesToEncoderUnits(position);
     climbMotor.set(ControlMode.Position, setpoint);
   }
 
   private double inchesToEncoderUnits(double inches) {
-    return inches * gearRatio * (2048.0 / (Math.PI * pulleyDiameter));
+    return inches * gearRatio * (2048.0 / (Math.PI * pulleyDiameter)); //Returns the distance moved in encoder units from inches based on dimensions and gear ratio of the climber??
   }
 
   private double encoderUnitsToInches(double encoderUnits) {
-    return encoderUnits * (1/gearRatio) * ((Math.PI * pulleyDiameter) / 2048.0);
+    return encoderUnits * (1/gearRatio) * ((Math.PI * pulleyDiameter) / 2048.0);//Returns the distance moved in inches from encoder units based on dimensions and gear ratio of the climber??
   }
 
   private void updateShuffleboard(){

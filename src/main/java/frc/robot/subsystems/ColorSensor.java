@@ -80,7 +80,7 @@ public class ColorSensor extends SubsystemBase {
                 return 4;
             } else
                 return 0;
-        }
+        } //Determines the displayed color based on the quantative amount of said color???????
     }
 
     public void resetRotationControlVars() {
@@ -88,7 +88,7 @@ public class ColorSensor extends SubsystemBase {
         semiRotations = 0;
         realIntervals = 0;
         colorID = panelColor();
-    }
+    } //Resets RotationControlVars when method is called upon
 
     public boolean rotationControlComplete() {
     /*if(panelColor() == colorID && isColor == false){
@@ -109,7 +109,7 @@ public class ColorSensor extends SubsystemBase {
             return true;
         else
             return false;
-    }
+    }//Runs code if color sensor doesn't detect any color???
 
     public void setOutput(double output) {
         motor.set(ControlMode.PercentOutput, output);
@@ -129,7 +129,7 @@ public class ColorSensor extends SubsystemBase {
             default:
                 return -1;
         }
-    }
+    }//returns a value that corresponds with a color based on the message??
 
     public void updateSmartDashboard() {
         String colorName = "Not Close Enough";
