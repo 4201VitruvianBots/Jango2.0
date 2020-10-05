@@ -24,6 +24,7 @@ public class intake extends SubsystemBase {
    */
   private TalonFX intakeMotor =  new TalonFX(Constants.intakeMotor, MotorType.kBrushless);
   DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
+  DoubleSolenoid intakePiston2 = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
   private boolean intaking = false;
   public intake() {
     intakeMotor.restoreFactoryDefaults();
@@ -39,11 +40,13 @@ public class intake extends SubsystemBase {
     intaking = state;
   }
   public boolean getIntakePistonExtendStatus(){
-    return intakePiston.get() == DoubleSolenoid.Value.kForward ? true : false;
+    return intakePiston.get() == DoubleSolenoid.Value.kForward;
+    return intakePiston2.get() == DoubleSolenoid.Value.kForward;
   }
 
   public void setintakePiston(boolean state){
     intakePiston.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+    intakePiston2.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
   }
   public void setIntakePercentOutput(double value){
     intakeMotor.set(value);
