@@ -7,28 +7,26 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.constants.Constants;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-public class intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
   /**
    * Creates a new intake.
    */
-  private TalonFX intakeMotor =  new TalonFX(Constants.intakeMotor, MotorType.kBrushless);
+  private TalonFX intakeMotor =  new TalonFX(Constants.intakeMotor);
   DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
   DoubleSolenoid intakePiston2 = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
   private boolean intaking = false;
-  public intake() {
-    intakeMotor.restoreFactoryDefaults();
-    intakeMotor.setIdleMode(TalonFX.IdleMode.kBrake);
+
+  public Intake() {
+    intakeMotor.configFactoryDefault();
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
     intakeMotor.setInverted(false);
 
   }
@@ -40,8 +38,12 @@ public class intake extends SubsystemBase {
     intaking = state;
   }
   public boolean getIntakePistonExtendStatus(){
-    return intakePiston.get() == DoubleSolenoid.Value.kForward;
-    return intakePiston2.get() == DoubleSolenoid.Value.kForward;
+
+    if ((intakePiston.get() == DoubleSolenoid.Value.kForward) && (intakePiston2.get() == DoubleSolenoid.Value.kForward)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public void setintakePiston(boolean state){
@@ -49,7 +51,7 @@ public class intake extends SubsystemBase {
     intakePiston2.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
   }
   public void setIntakePercentOutput(double value){
-    intakeMotor.set(value);
+    intakeMotor.set(ControlMode.PercentOutput, value);
   }
   private void updateSmartDashboard() {
     SmartDashboardTab.putBoolean("Intake", "Intake State", getIntakingState());
