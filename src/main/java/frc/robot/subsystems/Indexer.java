@@ -10,9 +10,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+// import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+// import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -22,9 +22,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+//import sun.text.bidi.BracketData;
 
 /*
 Susbsystem for interacting with the robot's indexer (feeds balls from intake to shooter)
+ */
+
+/*
+Motor directions:
+
+-Two motors: front and back motor
+  Front motor: always runs up (clockwise)
+  Back motor: runs down (counterclockwise)
+
+-Moving balls up:
+  Front motor spins up (clockwise)
+  Back motor spins up (clockwise)
  */
 
 public class Indexer extends SubsystemBase {
@@ -33,9 +46,12 @@ public class Indexer extends SubsystemBase {
    */
 
   // Setup indexer motor controller (SparkMax)
-  CANSparkMax master = new CANSparkMax(Constants.indexerMotor, MotorType.kBrushless);
-  CANEncoder encoder = master.getEncoder();
-  CANPIDController pidController = master.getPIDController();
+  CANSparkMax front = new CANSparkMax(Constants.indexerMotorFront, MotorType.kBrushless);
+  CANSparkMax back = new CANSparkMax(Constants.indexerMotorBack, MotorType.kBrushless);
+  CANEncoder encoderFront = front.getEncoder();
+  CANEncoder encoderBack = back.getEncoder();
+  // CANPIDController pidControllerFront = front.getPIDController();
+  // CANPIDController pidControllerBack = back.getPIDController();
 
   VictorSPX kicker = new VictorSPX(Constants.kickerMotor);
 
@@ -51,14 +67,14 @@ public class Indexer extends SubsystemBase {
 //  private double kP = 2.36;
 //  private double kI = 0;
 //  private double kD = 1070;
-  private double kF = 0.0001;
-  private double kP = 0.000001;
-  private double kI = 80;
-  private double kD = 0.0001;
+//   private double kF = 0.0001;
+//   private double kP = 0.000001;
+//   private double kI = 80;
+//   private double kD = 0.0001;
 
-  private double kI_Zone = 1;
-  private double maxVel = 1.1e4;
-  private double maxAccel = 1e6;
+//   private double kI_Zone = 1;
+//   private double maxVel = 1.1e4;
+//   private double maxAccel = 1e6;
 
   private double gearRatio = 1.0 / 27.0;
 
@@ -66,19 +82,31 @@ public class Indexer extends SubsystemBase {
 
   public Indexer() {
     // Motor and PID controller setup
-    master.restoreFactoryDefaults();
-    master.setInverted(false);
+    front.restoreFactoryDefaults();
+    back.restoreFactoryDefaults();
+    front.setInverted(false);
+    back.setInverted(true);
 
-    master.setIdleMode(IdleMode.kBrake);
+    front.setIdleMode(IdleMode.kBrake);
+    back.setIdleMode(IdleMode.kBrake);
 
-    pidController.setFF(kF);
-    pidController.setP(kP);
-    pidController.setI(kI);
-    pidController.setD(kD);
-    pidController.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
-    pidController.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
-    pidController.setSmartMotionAllowedClosedLoopError(1, 0);
-    pidController.setIZone(kI_Zone);
+    // pidControllerFront.setFF(kF);
+    // pidControllerFront.setP(kP);
+    // pidControllerFront.setI(kI);
+    // pidControllerFront.setD(kD);
+    // pidControllerFront.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
+    // pidControllerFront.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
+    // pidControllerFront.setSmartMotionAllowedClosedLoopError(1, 0);
+    // pidControllerFront.setIZone(kI_Zone);
+
+    // pidControllerBack.setFF(kF);
+    // pidControllerBack.setP(kP);
+    // pidControllerBack.setI(kI);
+    // pidControllerBack.setD(kD);
+    // pidControllerBack.setSmartMotionMaxVelocity(maxVel, 0); // Formerly 1.1e4
+    // pidControllerBack.setSmartMotionMaxAccel(maxAccel, 0); // Formerly 1e6
+    // pidControllerBack.setSmartMotionAllowedClosedLoopError(1, 0);
+    // pidControllerBack.setIZone(kI_Zone);
 
     kicker.configFactoryDefault();
     kicker.setInverted(true);
@@ -118,7 +146,8 @@ public class Indexer extends SubsystemBase {
   }
 
   public void setIndexerOutput(double output) {
-    master.set(output);
+    front.set(output);
+    back.set(output);
   }
 
   // Detect whether a new ball has been picked up
@@ -142,13 +171,15 @@ public class Indexer extends SubsystemBase {
 //  public void incrementIndexer(double setpoint){
 //    targetSetpoint = setpoint;
 //    SmartDashboard.putNumber("Target Setpoint", targetSetpoint);
-//    pidController.setReference(targetSetpoint, ControlType.kSmartMotion);
+//    pidControllerFront.setReference(targetSetpoint, ControlType.kSmartMotion);
+//    pidControllerBack.setReference(targetSetpoint, ControlType.kSmartMotion);
 //  }
 //
   public void setRPM(double rpm) {
     double setpoint = rpm / gearRatio;
     SmartDashboard.putNumber("Indexer Setpoint", setpoint);
-    pidController.setReference(setpoint, ControlType.kSmartVelocity);
+    // pidControllerFront.setReference(setpoint, ControlType.kSmartVelocity);
+    // pidControllerBack.setReference(setpoint, ControlType.kSmartVelocity);
   }
 //
 //  public void resetEncoderPosition(){
@@ -184,17 +215,21 @@ public class Indexer extends SubsystemBase {
 
   }
 
-  private void updatePIDValues() {
-    // Allow PID values to be set through SmartDashboard
-    kF = SmartDashboard.getNumber("kF", 0);
-    kP = SmartDashboard.getNumber("kP", 0);
-    kI = SmartDashboard.getNumber("kI", 0);
-    kD = SmartDashboard.getNumber("kD", 0);
-    pidController.setFF(kF);
-    pidController.setP(kP);
-    pidController.setI(kI);
-    pidController.setD(kD);
-  }
+  // private void updatePIDValues() {
+  //   // Allow PID values to be set through SmartDashboard
+  //   kF = SmartDashboard.getNumber("kF", 0);
+  //   kP = SmartDashboard.getNumber("kP", 0);
+  //   kI = SmartDashboard.getNumber("kI", 0);
+  //   kD = SmartDashboard.getNumber("kD", 0);
+  //   pidControllerFront.setFF(kF);
+  //   pidControllerFront.setP(kP);
+  //   pidControllerFront.setI(kI);
+  //   pidControllerFront.setD(kD);
+  //   pidControllerBack.setFF(kF);
+  //   pidControllerBack.setP(kP);
+  //   pidControllerBack.setI(kI);
+  //   pidControllerBack.setD(kD);
+  // }
 
   @Override
   public void periodic() {
