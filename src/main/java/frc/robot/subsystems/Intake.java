@@ -25,34 +25,37 @@ public class Intake extends SubsystemBase {
   private boolean intaking = false;
 
   public Intake() {
+    //Just makes sure that their are no previous settings on the motor and that its not inverted.  
     intakeMotor.configFactoryDefault();
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     intakeMotor.setInverted(false);
-
   }
   public boolean getIntakingState() {
     return intaking;
   }
-
+//Telling the code if the intake is actually intaking or not.
   public void setIntakingState(boolean state) {
     intaking = state;
   }
   public boolean getIntakePistonExtendStatus(){
 
+// We use an if statement because two returns wouldn't make sense since one of them would never run.
     if ((intakePiston.get() == DoubleSolenoid.Value.kForward) && (intakePiston2.get() == DoubleSolenoid.Value.kForward)) {
       return true;
     } else {
       return false;
     }
   }
-
+//For this command it is setting when the piston is up its false, and when the piston its down its true.
   public void setintakePiston(boolean state){
     intakePiston.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
     intakePiston2.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
   }
+  //Percent output is the amount of electricity that goes directly to the motor from the main battery.
   public void setIntakePercentOutput(double value){
     intakeMotor.set(ControlMode.PercentOutput, value);
   }
+  //Updates the smart dashboard regularly for ease of access to the robot's codition.
   private void updateSmartDashboard() {
     SmartDashboardTab.putBoolean("Intake", "Intake State", getIntakingState());
     SmartDashboardTab.putBoolean("Intake", "Pistons", getIntakePistonExtendStatus());
