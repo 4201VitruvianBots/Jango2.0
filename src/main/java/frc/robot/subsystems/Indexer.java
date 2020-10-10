@@ -90,6 +90,8 @@ public class Indexer extends SubsystemBase {
     //initShuffleboard();
   }
 
+  // Self-explanatory commands
+
   public void toggleControlMode() {
     if(controlMode == 0)
       controlMode = 1;
@@ -186,6 +188,7 @@ public class Indexer extends SubsystemBase {
 
   private void updatePIDValues() {
     // Allow PID values to be set through SmartDashboard
+    // ???
     kF = SmartDashboard.getNumber("kF", 0);
     kP = SmartDashboard.getNumber("kP", 0);
     kI = SmartDashboard.getNumber("kI", 0);

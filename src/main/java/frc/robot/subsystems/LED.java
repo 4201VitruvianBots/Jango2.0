@@ -24,6 +24,9 @@ public class LED extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
+
+  // Setup variables
+
   private AddressableLED LEDStrip;
   private AddressableLEDBuffer LEDBuffer;
   int start = (int)Timer.getFPGATimestamp() * 5;
@@ -54,6 +57,7 @@ public class LED extends SubsystemBase {
 //    SmartDashboard.putNumber("Rainbows", rainbows);
 //    SmartDashboard.putNumber("Speed", speed);
   }
+  // Set LED color based on RGB value
 
   public void setRGB(int red, int green, int blue){
     this.red = (int) (red * 0.5);
@@ -61,6 +65,7 @@ public class LED extends SubsystemBase {
     this.green = (int) (green * 0.5);
   }
 
+  // Set LED color ???
   public void setSolidColor(){
     for(int i = 0; i < LEDBuffer.getLength(); i++){
       LEDBuffer.setRGB(i, red, green, blue);
@@ -73,6 +78,7 @@ public class LED extends SubsystemBase {
     }
   }
 
+  // Set LEDS to blink
   public void setBlinkingColor(boolean blinkType){
     double time = (int)(5 * Timer.getFPGATimestamp());
     if(!blinkType){
@@ -94,6 +100,7 @@ public class LED extends SubsystemBase {
     }
   }
 
+  // Set LED colors to a rainbow effect
   double hueOffset = 0;
   public void setRainbow(double iterations, double speed){
     for(int i = 0; i < stripLength; i++){
@@ -104,6 +111,7 @@ public class LED extends SubsystemBase {
     Timer.delay(0.05);
   }
 
+  // ???
   int head = 0;
   public void trail(int interval){
     resetLED();
@@ -114,6 +122,7 @@ public class LED extends SubsystemBase {
     head = ++head % interval;
   }
 
+  // Flash LEDs
   public void flash(){
     setSolidColor();
     Timer.delay(0.1);
@@ -123,6 +132,7 @@ public class LED extends SubsystemBase {
     Timer.delay(0.25);
   }
 
+  // Set RGB color based on color value
   public void colorToRGB(int color){
     switch(color){
       case 1:
@@ -140,6 +150,7 @@ public class LED extends SubsystemBase {
     }
   }
 
+  // ???
   int offset = 0;
   
   int cRed = 0;
@@ -185,6 +196,7 @@ public class LED extends SubsystemBase {
   }
 
   int state = -1;
+  // Sets LEDs to mode based on state
   public void setLED(){
     switch(state){
       case 0:

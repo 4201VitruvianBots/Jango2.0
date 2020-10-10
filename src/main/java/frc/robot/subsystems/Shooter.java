@@ -31,7 +31,10 @@ public class Shooter extends SubsystemBase {
      *
      * @return
      */
-    // PID loop contants
+
+    // setup variables
+
+    // PID loop constants
     private double kF = 0.0523;  // 0.054      //  Gree: 0.0475;
     private double kP = 0.6;      //  0.4       //  0.00047
     private double kI = 0.0;                    //  0.0000287
@@ -100,6 +103,8 @@ public class Shooter extends SubsystemBase {
         initShuffleboard();
     }
 
+    //Self-explanatory commands
+
     public double getMotorInputCurrent(int motorIndex) {
         return outtakeMotors[motorIndex].getSupplyCurrent();
     }
@@ -163,6 +168,8 @@ public class Shooter extends SubsystemBase {
         return (RPM / 600.0) * 2048.0;
     }
 
+    // Smart Dashboard settings
+    
     private void initShuffleboard() {
         // Unstable. Don''t use until WPILib fixes this
 //    Shuffleboard.getTab("Shooter").addNumber("RPM Primary", () -> this.getRPM(0));

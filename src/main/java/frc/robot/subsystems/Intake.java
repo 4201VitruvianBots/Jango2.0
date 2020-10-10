@@ -42,6 +42,8 @@ public class Intake extends SubsystemBase {
   DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
 
   public Intake() {
+    // Configure motors
+
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     intakeMotor.setInverted(false);
@@ -56,6 +58,8 @@ public class Intake extends SubsystemBase {
 //    canPidController.setSmartMotionAllowedClosedLoopError(allowableError, 0);
   }
 
+  // Self-explanatory functions
+  
   public boolean getIntakingState() {
     return intaking;
   }

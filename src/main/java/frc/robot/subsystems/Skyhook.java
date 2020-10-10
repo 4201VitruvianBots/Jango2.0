@@ -22,6 +22,7 @@ public class Skyhook extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
+  // Setup motor
   private VictorSPX skyhookMotor = new VictorSPX(Constants.skyhookMotor);
 
   public Skyhook() {
@@ -29,6 +30,8 @@ public class Skyhook extends SubsystemBase {
     skyhookMotor.setNeutralMode(NeutralMode.Brake);
     skyhookMotor.setInverted(true);
   }
+
+  //Set motor
   public void setSkyhook(double value) {
     skyhookMotor.set(ControlMode.PercentOutput, value);
   }

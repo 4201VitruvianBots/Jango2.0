@@ -24,6 +24,7 @@ Misc things that don't need their own subsystem
  */
 
 public class Controls extends SubsystemBase {
+    // Set up variables
     private PowerDistributionPanel m_pdp;
     private DriveTrain m_driveTrain;
     private Shooter m_shooter;
@@ -36,6 +37,8 @@ public class Controls extends SubsystemBase {
     private boolean lcdOn = true;
 
     AnalogInput PressureSensor = new AnalogInput(0);
+
+    // Set up subsystems
 
     public Controls(DriveTrain driveTrain, Shooter shooter, Turret turret, PowerDistributionPanel pdp) {
         m_driveTrain = driveTrain;
@@ -67,6 +70,7 @@ public class Controls extends SubsystemBase {
                 "hide", "join:Shooter/Input Currents");
     }
 
+    // Self-Explanatory functions
 
     public double getBatteryVoltage() {
         return m_pdp.getVoltage();

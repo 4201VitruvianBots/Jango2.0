@@ -31,20 +31,24 @@ import frc.robot.constants.Constants;
 
 public class
 DriveTrain extends SubsystemBase {
+    // Set up constants
     private double gearRatioLow = 1 / 14.14;
     private double gearRatioHigh = 1 / 7.49;
     private double wheelDiameter = 0.5;
 
+    // ???
     private double kS = 0.19;
     private double kV = 2.23;
     private double kA = 0.0289;
 
+    // ???
     public double kP = 1.33;
     public double kI = 0;
     public double kD = 0;
 
     public int controlMode = 0;
 
+    // Set up motors
     private TalonFX[] driveMotors = {
             new TalonFX(Constants.leftFrontDriveMotor),
             new TalonFX(Constants.leftRearDriveMotor),
@@ -59,14 +63,17 @@ DriveTrain extends SubsystemBase {
             false
     };
 
+    //Set up shifters
     DoubleSolenoid driveTrainShifters = new DoubleSolenoid(Constants.pcmOne, Constants.driveTrainShiftersForward, Constants.driveTrainShiftersReverse);
     private AHRS navX = new AHRS(SerialPort.Port.kMXP);
 
+    // Set up spatial tools
     DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(21.5));
     DifferentialDriveOdometry odometry;
 
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
 
+    // ???
     PIDController leftPIDController = new PIDController(kP, kI, kD);
     PIDController rightPIDController = new PIDController(kP, kI, kD);
 
@@ -90,6 +97,7 @@ DriveTrain extends SubsystemBase {
             motor.configReverseSoftLimitEnable(false);
         }
 
+        // Configure motors
         driveMotors[0].setInverted(true);
         driveMotors[1].setInverted(true);
         driveMotors[2].setInverted(false);
@@ -113,6 +121,8 @@ DriveTrain extends SubsystemBase {
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     }
 
+    // Self-explanatory functions
+
     public int getEncoderCount(int sensorIndex) {
         return driveMotors[sensorIndex].getSelectedSensorPosition();
     }
@@ -135,6 +145,7 @@ DriveTrain extends SubsystemBase {
         return (driveMotors[sensorIndex].getSelectedSensorPosition() / 2048.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
     }
 
+    // ???
     public double getMotorInputCurrent(int motorIndex) {
         return driveMotors[motorIndex].getSupplyCurrent();
     }
@@ -187,6 +198,7 @@ DriveTrain extends SubsystemBase {
         driveMotors[2].set(ControlMode.PercentOutput, rightOutput);
     }
 
+    // Make motors neutral
     public void setDriveTrainNeutralMode(int mode) {
         switch (mode) {
             case 2:
