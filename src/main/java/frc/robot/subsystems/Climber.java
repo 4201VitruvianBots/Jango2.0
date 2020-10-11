@@ -27,6 +27,8 @@ This class is the subsystem for the robot's climber
 
 public class Climber extends SubsystemBase {
 
+  // setup variables
+
   private double gearRatio = 1.0/18.0;
   public double pulleyDiameter = 2.0; // inches
 
@@ -57,7 +59,8 @@ public class Climber extends SubsystemBase {
     return climbState;
   }
 
-  public void setClimbState(boolean climbState) {//getting climbstate based on the actual climbstate
+  //getting climbstate based on the actual climbstate
+  public void setClimbState(boolean climbState) {
     this.climbState = climbState;
   }
 
@@ -70,19 +73,21 @@ public class Climber extends SubsystemBase {
 	  return climbMotor.getSelectedSensorPosition();
   }
 
-  public void setClimberPosition(double position) { //sets and configures the ClimberPosition
+  //sets and configures the ClimberPosition
+  public void setClimberPosition(double position) { 
     double setpoint = inchesToEncoderUnits(position);
     climbMotor.set(ControlMode.Position, setpoint);
   }
 
   private double inchesToEncoderUnits(double inches) {
-    return inches * gearRatio * (2048.0 / (Math.PI * pulleyDiameter)); //Returns the distance moved in encoder units from inches based on dimensions and gear ratio of the climber??
+    return inches * gearRatio * (2048.0 / (Math.PI * pulleyDiameter)); //Returns the distance moved in encoder units from inches based on dimensions and gear ratio of the climber
   }
 
   private double encoderUnitsToInches(double encoderUnits) {
     return encoderUnits * (1/gearRatio) * ((Math.PI * pulleyDiameter) / 2048.0);
   }//Returns the distance moved in inches from encoder units based on dimensions and gear ratio of the climber??
 
+  // Setting SmartDashboard
   private void updateShuffleboard(){
     SmartDashboard.putBoolean("Climb Mode", getClimbState());
 

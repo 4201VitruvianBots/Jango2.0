@@ -30,6 +30,9 @@ public class Turret extends SubsystemBase {
     /**
      * Creates a new ExampleSubsystem.
      */
+
+    // setup variables
+
     // Turret PID gains
     double kF = 0.07;     //0.05
     double kP = 0.2;    //0.155
@@ -90,6 +93,8 @@ public class Turret extends SubsystemBase {
         //initShuffleboard();
     }
 
+    // self-explanatory comnmands
+
     public void resetEncoder() {
         turretMotor.setSelectedSensorPosition(0);
         encoder.setPosition(0);
@@ -135,10 +140,12 @@ public class Turret extends SubsystemBase {
         turretMotor.set(ControlMode.PercentOutput, output);
     }
 
+    // ???
     public void setRobotCentricSetpoint(double setpoint) {
         this.setpoint = setpoint;
     }
 
+    // ???
     public void setFieldCentricSetpoint(double setpoint) {
         setpoint -= m_driveTrain.getAngle();
 
@@ -150,6 +157,7 @@ public class Turret extends SubsystemBase {
         this.setpoint = setpoint;
     }
 
+    // ???
     public void setClosedLoopPosition() {
         turretMotor.set(ControlMode.MotionMagic, degreesToEncoderUnits(getSetpoint()));
     }
@@ -166,14 +174,17 @@ public class Turret extends SubsystemBase {
         return encoderUnits * gearRatio * (360.0 / encoderUnitsPerRotation);
     }
 
+    // checks if the turret is pointing within the tolerance of the target
     public boolean onTarget() {
         return Math.abs(turretMotor.getClosedLoopError()) < kErrorBand;
     }
 
+    // ???
     public void clearIAccum() {
         turretMotor.setIntegralAccumulator(0);
     }
 
+    // ???
     private void setTurretLatch(boolean state) {
         turretHomeSensorLatch = state;
     }
@@ -193,6 +204,7 @@ public class Turret extends SubsystemBase {
         Shuffleboard.getTab("Turret").addBoolean("Home", this::getTurretHome);
     }
 
+    // set smartdashboard
     private void updateSmartdashboard() {
         SmartDashboard.putNumber("Turret Angle", getFieldRelativeAngle());
 

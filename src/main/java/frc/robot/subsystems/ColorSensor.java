@@ -29,6 +29,8 @@ public class ColorSensor extends SubsystemBase {
     /**
      * Creates a new ExampleSubsystem.
      */
+
+     // setup variables
     public boolean practiceField = false;
     public boolean isColor = false;
     public boolean working = false;
@@ -38,6 +40,7 @@ public class ColorSensor extends SubsystemBase {
     public ColorSensorV3 sensor = new ColorSensorV3(I2C.Port.kOnboard);
     public TalonSRX motor = new TalonSRX(Constants.colorWheelMotor);
 
+    // ???
     public ColorSensor() {
         motor.setNeutralMode(NeutralMode.Brake);
     }
@@ -46,14 +49,17 @@ public class ColorSensor extends SubsystemBase {
         return sensor.getColor();
     }
 
+    // ???
     public double getIR() {
         return sensor.getIR();
     }
 
+    // get distance to color
     public int getProximity() {
         return sensor.getProximity();
     }
 
+    // ???
     public int panelColor() { // none = 0; red = 1; green = 2; blue = 3; yellow = 4
         if (practiceField) {
             if (getColor().red > getColor().green && getColor().green * 1.8 > getColor().red) {
@@ -129,8 +135,9 @@ public class ColorSensor extends SubsystemBase {
             default:
                 return -1;
         }
-    }//returns a value that corresponds with a color based on the message??
+    }//returns a value that corresponds with a color based on the message
 
+    // Sets smartdashboard
     public void updateSmartDashboard() {
         String colorName = "Not Close Enough";
         SmartDashboard.putNumber("Red", getColor().red);

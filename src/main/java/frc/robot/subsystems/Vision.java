@@ -266,6 +266,7 @@ public class Vision extends SubsystemBase {
 
 	}
 
+	// set smartdashboard
 	public void updateSmartDashboard() {
 		SmartDashboard.putBoolean("Limelight Has Target", hasTarget());
 		SmartDashboard.putNumber("Limelight Target X", getTargetX());
