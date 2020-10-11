@@ -41,7 +41,7 @@ DriveTrain extends SubsystemBase {
     private double kV = 2.23;
     private double kA = 0.0289;
 
-    // ???
+    // PID controller values
     public double kP = 1.33;
     public double kI = 0;
     public double kD = 0;
@@ -73,7 +73,7 @@ DriveTrain extends SubsystemBase {
 
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
 
-    // ???
+    // Sets up PIDcontroller
     PIDController leftPIDController = new PIDController(kP, kI, kD);
     PIDController rightPIDController = new PIDController(kP, kI, kD);
 

@@ -80,8 +80,8 @@ public class Climber extends SubsystemBase {
   }
 
   private double encoderUnitsToInches(double encoderUnits) {
-    return encoderUnits * (1/gearRatio) * ((Math.PI * pulleyDiameter) / 2048.0);//Returns the distance moved in inches from encoder units based on dimensions and gear ratio of the climber??
-  }
+    return encoderUnits * (1/gearRatio) * ((Math.PI * pulleyDiameter) / 2048.0);
+  }//Returns the distance moved in inches from encoder units based on dimensions and gear ratio of the climber??
 
   private void updateShuffleboard(){
     SmartDashboard.putBoolean("Climb Mode", getClimbState());
