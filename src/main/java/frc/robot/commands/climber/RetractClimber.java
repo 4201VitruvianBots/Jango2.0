@@ -38,7 +38,7 @@ public class RetractClimber extends CommandBase {
     if(!m_climber.getClimbPistonExtendStatus())
       m_climber.setClimberOutput(0.5);
   }
-
+//If the climber is extended, then set the output to 50 percent.
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

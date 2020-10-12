@@ -47,7 +47,7 @@ public class SetSkyhookOutput extends CommandBase {
     if(m_climber.getClimbState())
       m_skyhook.setSkyhook(m_output.getAsDouble());
   }
-
+ //Getting the climb state as a true or false and getting the skyhook as a double value.
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

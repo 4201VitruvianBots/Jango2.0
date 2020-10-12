@@ -49,6 +49,7 @@ public class SetClimberOutput extends CommandBase {
   public void execute() {
     double input = Math.abs(m_controller.getRawAxis(5)) > 0.2 ? m_controller.getRawAxis(5) : 0;
     direction = input > 0 ? 1 : input < 0 ? -1 : 0;
+   //If the input is greater than zero, it's set to one. If it is less than zero it is set to -1.
     if(m_climber.getClimbState()) {
       SmartDashboardTab.putNumber("Climber", "Direction", direction);
       SmartDashboardTab.putBoolean("Climber", "currentDirection", currentDirection);
@@ -63,7 +64,8 @@ public class SetClimberOutput extends CommandBase {
           switchDirection = false;
         }
       }
-
+    //If direction is not equal to zero, start the timer. If direction is equal to one and its not in the right currentdirection, it will switch the direction. 
+    //If the direction is less than or equal to zero and its in the right direction, it does not move or change directions.
       if(movable) {
 //        SmartDashboardTab.putString("Climber", "SetClimberOutput", "Manual Control");
 //        SmartDashboardTab.putNumber("Climber", "Input", input);

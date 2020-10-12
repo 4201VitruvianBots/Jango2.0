@@ -47,14 +47,16 @@ public class SetArcadeDrive extends CommandBase {
   public void execute() {
     double joystickY = (Math.abs(m_throttle.getAsDouble()) > 0.05) ? m_throttle.getAsDouble() : 0;
     double joystickX = (Math.abs(m_turn.getAsDouble()) > 0.05) ? m_turn.getAsDouble() : 0;
+   //Using functions to get the turn and throttle as a double instead of what it was previously.
 
 //        double throttle = 0.5 * (joystickY + Math.pow(joystickY, 3));
 //        throttle = throttle < 0 ? Math.max( -0.7, throttle) : throttle;
 //        double turn = 0.25 *(joystickX + Math.pow(joystickX, 3));
     double throttle = joystickY;
     throttle = throttle < 0 ? Math.max(-0.7, throttle) : throttle;
+   //If throttle is less than 0 and greater than -0.7, it will be its normal value. If it is less than -0.7 and less than 0, it will be -0.7. If throttle is greater than 0, there is no change.
     double turn = (m_driveTrain.getDriveShifterStatus() ? 0.5 : 0.35) * joystickX;
-
+   //If m_driveTrain.getDriveShifterStatus() is true then it is 0.5, if not then 0.35. After that number is selected multiply it by joystickX.
 //    if(m_intake.getIntakingState())
 //      throttle = - throttle;
 

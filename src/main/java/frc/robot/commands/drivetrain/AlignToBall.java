@@ -53,7 +53,7 @@ public class AlignToBall extends CommandBase {
             driveTrain.setVoltageOutput(leftVoltage, rightVoltage);
         }
     }
-
+//If the vision has a powercell, use the angle to calculate how much voltage should go to each side of the Drive Train. 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
