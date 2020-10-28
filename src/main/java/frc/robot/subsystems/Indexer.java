@@ -10,9 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
-// import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-// import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -22,10 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-//import sun.text.bidi.BracketData;
 
 /*
-Susbsystem for interacting with the robot's indexer (feeds balls from intake to shooter)
+Susbsystem for interacting with the robot's indexer
  */
 
 /*
