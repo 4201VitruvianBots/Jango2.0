@@ -46,6 +46,7 @@ public class Vision extends SubsystemBase {
 	// NetworkTables for reading vision data
 	private NetworkTable limelight;
 	private NetworkTable openSight;
+	private NetworkTable intakeVision;
 
 	// Subsystems that will be controlled based on vision data
 	private final DriveTrain m_driveTrain;
@@ -89,6 +90,7 @@ public class Vision extends SubsystemBase {
 		// Init vision NetworkTables
 		limelight = NetworkTableInstance.getDefault().getTable("limelight");
 		openSight = NetworkTableInstance.getDefault().getTable("OpenSight");
+		intakeVision = NetworkTableInstance.getDefault().getTable("IntakeVision");
 		setPipeline(0);
 
 		//initShuffleboard();
@@ -257,6 +259,11 @@ public class Vision extends SubsystemBase {
 
 	public boolean hasPowerCell() {
 		return openSight.getEntry("found").getBoolean(false);
+	}
+
+	// Intake vision functions
+	public double getPowercellCount() {
+		return intakeVision.getEntry("count").getDouble(0);
 	}
 
 	private void initShuffleboard() {

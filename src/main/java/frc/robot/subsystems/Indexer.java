@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.Vision;
 
 /*
 Susbsystem for interacting with the robot's indexer
@@ -51,7 +52,6 @@ public class Indexer extends SubsystemBase {
   VictorSPX kicker = new VictorSPX(Constants.kickerMotor);
 
   // Indexer sensors setup
-  DigitalInput intakeSensor = new DigitalInput(Constants.intakeSensor);
   DigitalInput indexerTopSensor = new DigitalInput(Constants.indexerTopSensor);
   DigitalInput indexerBottomSensor = new DigitalInput(Constants.indexerBottomSensor);
 
@@ -60,6 +60,9 @@ public class Indexer extends SubsystemBase {
   private double gearRatio = 1.0 / 27.0;
 
   private int controlMode = 1;
+
+  private double ballCount = 0;
+  private double prevBallCount = 0;
 
   public Indexer() {
     // Motor and PID controller setup
@@ -86,9 +89,7 @@ public class Indexer extends SubsystemBase {
     return controlMode;
   }
 
-  public boolean getIntakeSensor(){
-    return (!intakeSensor.get());
-  }
+  public double getIntakeBallCount() {  }
 
   public boolean getIndexerBottomSensor(){
     return !indexerBottomSensor.get();
