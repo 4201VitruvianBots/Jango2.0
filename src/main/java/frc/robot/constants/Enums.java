@@ -14,4 +14,7 @@ public class Enums {
     public static enum IntakeStates {
         INTAKE_EMPTY, INTAKE_ONE_BALL, INTAKE_FOUR_BALLS, INTAKE_FIVE_BALLS
     }
+    public static enum IndexerStates {
+        INDEXER_EMPTY, INDEXER_ONE_BALL, INDEXER_TWO_BALLS
+    }
 }

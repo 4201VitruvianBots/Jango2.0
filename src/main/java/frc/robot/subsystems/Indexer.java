@@ -130,6 +130,23 @@ public class Indexer extends SubsystemBase {
     SmartDashboard.putNumber("Indexer Setpoint", setpoint);
   }
 
+  public boolean getIndexerState(){
+    if(m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
+      indexerState = IndexerStates.INDEXER_TWO_BALLS;
+    else
+      indexerState = IndexerStates.INDEXER_ONE_BALL;
+  }
+
+  public void IndexerBandStates(boolean getIndexerState) {
+  //If neither sensors are triggered move 1 down and 1 up
+  //If bottom sensor is triggered move both up
+  //If both sensors are triggered move 1 down 1 up
+  //If shoot button is pressed both up 
+  switch(indexerState){
+   case INDEXER_TWO_BALLS:
+   front.setOutput(output)
+  }
+  }
   private void initShuffleboard() {
     // Unstable. Don''t use until WPILib fixes this
     Shuffleboard.getTab("Indexer").addBoolean("Intake Sensor", this::getIntakeSensor);
