@@ -133,8 +133,10 @@ public class Indexer extends SubsystemBase {
   public boolean getIndexerState(){
     if(m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
       indexerState = IndexerStates.INDEXER_TWO_BALLS;
-    else
+    else if(m_indexer.getIndexerBottomSensor())
       indexerState = IndexerStates.INDEXER_ONE_BALL;
+    else
+      indexerState = IndexerStates.INDEXER_EMPTY;
   }
 
   public void IndexerBandStates(boolean getIndexerState) {
@@ -144,7 +146,19 @@ public class Indexer extends SubsystemBase {
   //If shoot button is pressed both up 
   switch(indexerState){
    case INDEXER_TWO_BALLS:
-   front.setOutput(output)
+    front.setOutput(output);
+    back.setOutput(-output);
+    break;
+   case INDEXER_ONE_BALL:
+    front.setOutput(output);
+    back.setOutput(output);
+    break;
+    case INDEXER_EMPTY:
+    front.setOutput(output);
+    back.setOutput(-output);
+  default:
+    front.setOutput(output);
+    back.setOutput(output);
   }
   }
   private void initShuffleboard() {
