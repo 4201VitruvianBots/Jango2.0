@@ -54,10 +54,9 @@ public class AutoControlledIntake extends CommandBase {
   public void initialize() {
     m_intake.setIntakingState(true);
     timestamp = Timer.getFPGATimestamp();
-
-    if(m_indexer.getIntakeSensor() && m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
+    if(m_indexer.getPowercellCount() == 5 && m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
       intakeState = IntakeStates.INTAKE_FIVE_BALLS;
-    else if(m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
+      else if(m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
       intakeState = IntakeStates.INTAKE_FOUR_BALLS;
     else
       intakeState = IntakeStates.INTAKE_ONE_BALL;

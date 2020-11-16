@@ -49,11 +49,11 @@ public class ControlledIntakeOld extends CommandBase {
     haveFour = false;
     fourBallTrigger = new MinTimeBoolean(1);
     timestamp = Timer.getFPGATimestamp();
-    if(m_indexer.getIntakeSensor() && m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
+    if(getPowercellCount() == 5 && m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
       intakeState = IntakeStates.INTAKE_FIVE_BALLS;
-    else if(m_indexer.getIndexerBottomSensor() && m_indexer.getIndexerTopSensor())
+    else if(m_indexer.getPowercellCount() == 4 && m_indexer.getIndexerTopSensor())
       intakeState = IntakeStates.INTAKE_FOUR_BALLS;
-    else if(m_indexer.getIndexerBottomSensor())
+    else if(m_indexer.IndexerBottomSensor())
       intakeState = IntakeStates.INTAKE_ONE_BALL;
     else
       intakeState = IntakeStates.INTAKE_EMPTY;
@@ -88,7 +88,7 @@ public class ControlledIntakeOld extends CommandBase {
       case INTAKE_ONE_BALL:
 //        m_intake.setRPM(intakeRPM);
         m_indexer.setKickerOutput(-0.25);
-        if (m_indexer.getIntakeSensor() && !delaying) {
+        if (m_indexer.getPowercellCount() && !delaying) {
           intakeTimestamp = Timer.getFPGATimestamp();
           delaying = true;
         }
@@ -115,7 +115,7 @@ public class ControlledIntakeOld extends CommandBase {
 //          intakeState = IntakeStates.INTAKE_ONE_BALL;
 //        m_intake.setRPM(intakeRPM);
         m_indexer.setKickerOutput(-0.25);
-        if (m_indexer.getIntakeSensor()) {
+        if (m_indexer.getPowercellCount()) {
           m_indexer.setRPM(225);
           intaking = true;
         }
