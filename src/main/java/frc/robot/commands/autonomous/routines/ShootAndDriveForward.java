@@ -25,23 +25,23 @@ public class ShootAndDriveForward extends SequentialCommandGroup {
         config.setReversed(false);
         config.setEndVelocity(0);
         ArrayList<Pose2d> path = new ArrayList<>();
-        path.add(new Pose2d(0,0, new Rotation2d()));
-        path.add(new Pose2d(Units.feetToMeters(8),0, new Rotation2d()));
+        path.add(new Pose2d(0, 0, new Rotation2d()));
+        path.add(new Pose2d(Units.feetToMeters(8), 0, new Rotation2d()));
         var driveBackwards = TrajectoryUtils.generateRamseteCommand(driveTrain, path, config);
 
         addCommands(
                 new ResetOdometry(driveTrain),
-                new SetDriveNeutralMode(driveTrain,0),
+                new SetDriveNeutralMode(driveTrain, 0),
                 new SetDriveShifters(driveTrain, false),
                 new SetAndHoldRpmSetpoint(shooter, vision, 3800),
                 new SetTurretRobotRelativeAngle(turret, 0).withTimeout(0.5),
                 new AutoUseVisionCorrection(turret, vision).withTimeout(0.5),
 //                new WaitCommand(0.5),
                 new ConditionalCommand(new WaitCommand(0),
-                                       new WaitCommand(0.5),
-                                       shooter::canShoot),
-                new AutoRapidFireSetpoint(shooter, indexer, intake,1).withTimeout(3),
-                driveBackwards.andThen(()->driveTrain.setMotorTankDrive(0,0))
+                        new WaitCommand(0.5),
+                        shooter :: canShoot),
+                new AutoRapidFireSetpoint(shooter, indexer, intake, 1).withTimeout(3),
+                driveBackwards.andThen(() -> driveTrain.setMotorTankDrive(0, 0))
         );
     }
 }

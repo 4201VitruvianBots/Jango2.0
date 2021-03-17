@@ -9,13 +9,16 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.commands.autonomous.VitruvianRamseteCommand;
 import frc.robot.subsystems.DriveTrain;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrajectoryUtils {
+
     public static ArrayList<Pose2d> readCsvTrajectory(String filename) {
         BufferedReader reader;
         String fileLine;
@@ -27,8 +30,8 @@ public class TrajectoryUtils {
             while ((fileLine = reader.readLine()) != null) {
                 fields = fileLine.split(",");
                 trajectoryPoints.add(new Pose2d(Units.feetToMeters(Double.parseDouble(fields[0])),
-                                                Units.feetToMeters(Double.parseDouble(fields[1])),
-                                                Rotation2d.fromDegrees(Double.parseDouble(fields[2]))));
+                        Units.feetToMeters(Double.parseDouble(fields[1])),
+                        Rotation2d.fromDegrees(Double.parseDouble(fields[2]))));
 
             }
         } catch (FileNotFoundException e) {
@@ -44,6 +47,11 @@ public class TrajectoryUtils {
     public static VitruvianRamseteCommand generateRamseteCommand(DriveTrain driveTrain, ArrayList<Pose2d> path, TrajectoryConfig config) {
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(path, config);
 
+        return generateRamseteCommand(driveTrain, trajectory);
+    }
+
+    public static VitruvianRamseteCommand generateRamseteCommand(DriveTrain driveTrain, Trajectory trajectory) {
+
         VitruvianRamseteCommand ramseteCommand = new VitruvianRamseteCommand(
                 trajectory,
                 driveTrain::getRobotPose,
@@ -54,9 +62,7 @@ public class TrajectoryUtils {
                 driveTrain.getLeftPIDController(),
                 driveTrain.getRightPIDController(),
                 driveTrain::setVoltageOutput,
-                driveTrain,
-                path,
-                config
+                driveTrain
         );
         return ramseteCommand;
     }

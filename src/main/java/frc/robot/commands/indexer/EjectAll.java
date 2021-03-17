@@ -7,58 +7,56 @@
 
 package frc.robot.commands.indexer;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
  */
 public class EjectAll extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Indexer m_indexer;
-  private final Intake m_shooter;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final Indexer m_indexer;
+    private final Intake m_shooter;
 
-  public EjectAll(Indexer indexer, Intake intake) {
-    m_indexer = indexer;
-    m_shooter = intake;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(indexer);
-    addRequirements(intake);
-  }
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param subsystem The subsystem used by this command.
+     */
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-  }
+    public EjectAll(Indexer indexer, Intake intake) {
+        m_indexer = indexer;
+        m_shooter = intake;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(indexer);
+        addRequirements(intake);
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_indexer.setIndexerOutput(-0.6);
-    m_indexer.setKickerOutput(-0.5);
-    m_shooter.setIntakePercentOutput(-0.5);
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(final boolean interrupted) {  
-    m_indexer.setKickerOutput(0);
-    m_indexer.setIndexerOutput(0);
-    m_shooter.setIntakePercentOutput(0);
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        m_indexer.setIndexerOutput(- 0.6);
+        m_indexer.setKickerOutput(- 0.5);
+        m_shooter.setIntakePercentOutput(- 0.5);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(final boolean interrupted) {
+        m_indexer.setKickerOutput(0);
+        m_indexer.setIndexerOutput(0);
+        m_shooter.setIntakePercentOutput(0);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

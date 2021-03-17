@@ -14,40 +14,41 @@ import frc.robot.subsystems.Climber;
  * An example command that uses an example subsystem.
  */
 public class RetractClimber extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Climber m_climber;
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final Climber m_climber;
 
-  /*
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public RetractClimber(Climber climber) {
-    m_climber = climber;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-  }
+    /*
+     * Creates a new ExampleCommand.
+     *
+     * @param subsystem The subsystem used by this command.
+     */
+    public RetractClimber(Climber climber) {
+        m_climber = climber;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(climber);
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-  }
-  @Override
-  public void execute() {
-    m_climber.setClimbPiston(false);
-    if(!m_climber.getClimbPistonExtendStatus())
-      m_climber.setClimberOutput(0.5);
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_climber.setClimberOutput(0.0);
-  }
+    @Override
+    public void execute() {
+        m_climber.setClimbPiston(false);
+        if(! m_climber.getClimbPistonExtendStatus())
+            m_climber.setClimberOutput(0.5);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        m_climber.setClimberOutput(0.0);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

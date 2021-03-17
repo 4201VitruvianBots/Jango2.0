@@ -21,7 +21,8 @@ public class AutoRapidFireSetpoint extends CommandBase {
     private final Shooter m_shooter;
     private final Indexer m_indexer;
     private final Intake m_intake;
-    private double startTime, m_shootTimeout;
+    private final double m_shootTimeout;
+    private double startTime;
     private boolean timerStart;
 
     /**
@@ -49,7 +50,7 @@ public class AutoRapidFireSetpoint extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_shooter.canShoot() || (Timer.getFPGATimestamp() - startTime) > m_shootTimeout) {
+        if(m_shooter.canShoot() || (Timer.getFPGATimestamp() - startTime) > m_shootTimeout) {
             m_indexer.setIndexerOutput(1);
             m_indexer.setKickerOutput(1);
             m_intake.setIntakePercentOutput(1);

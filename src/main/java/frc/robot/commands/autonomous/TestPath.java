@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -28,65 +27,66 @@ import java.util.ArrayList;
  * An example command that uses an example subsystem.
  */
 public class TestPath extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveTrain m_driveTrain;
-  private Trajectory trajectory;
-  private static double m_period = 0.02;
-  private Notifier m_notifier;
-  private ArrayList<Pose2d> m_path;
-  private boolean m_isInverted;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param driveTrain The subsystem used by this command.
-   */
-  public TestPath(DriveTrain driveTrain, ArrayList<Pose2d> path, boolean isInverted) {
-    m_driveTrain = driveTrain;
-    m_path = path;
-    m_isInverted = isInverted;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_driveTrain);
-  }
+    private static final double m_period = 0.02;
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final DriveTrain m_driveTrain;
+    private final ArrayList<Pose2d> m_path;
+    private final boolean m_isInverted;
+    private Trajectory trajectory;
+    private Notifier m_notifier;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    m_driveTrain.resetOdometry(new Pose2d(), new Rotation2d());
-    m_driveTrain.resetEncoderCounts();
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param driveTrain The subsystem used by this command.
+     */
+    public TestPath(DriveTrain driveTrain, ArrayList<Pose2d> path, boolean isInverted) {
+        m_driveTrain = driveTrain;
+        m_path = path;
+        m_isInverted = isInverted;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(m_driveTrain);
+    }
 
-    var trajectoryConstraints = new DifferentialDriveKinematicsConstraint(m_driveTrain.getDriveTrainKinematics(),
-                                                    3);
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        m_driveTrain.resetOdometry(new Pose2d(), new Rotation2d());
+        m_driveTrain.resetEncoderCounts();
 
-    var trajectoryConfig = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(4));
+        var trajectoryConstraints = new DifferentialDriveKinematicsConstraint(m_driveTrain.getDriveTrainKinematics(),
+                3);
 
-    trajectoryConfig.setReversed(m_isInverted);
+        var trajectoryConfig = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(4));
 
-    trajectory = TrajectoryGenerator.generateTrajectory(m_path, trajectoryConfig);
+        trajectoryConfig.setReversed(m_isInverted);
 
-    RamseteCommand followTrajectory = new RamseteCommand(
-            trajectory,
-            m_driveTrain::getRobotPose,
-            new RamseteController(),
-            m_driveTrain.getFeedforward(),
-            m_driveTrain.getDriveTrainKinematics(),
-            m_driveTrain::getSpeeds,
-            m_driveTrain.getLeftPIDController(),
-            m_driveTrain.getRightPIDController(),
-            m_driveTrain::setVoltageOutput,
-            m_driveTrain
-    );
-    CommandScheduler.getInstance().schedule(followTrajectory);
-  }
+        trajectory = TrajectoryGenerator.generateTrajectory(m_path, trajectoryConfig);
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
+        RamseteCommand followTrajectory = new RamseteCommand(
+                trajectory,
+                m_driveTrain :: getRobotPose,
+                new RamseteController(),
+                m_driveTrain.getFeedforward(),
+                m_driveTrain.getDriveTrainKinematics(),
+                m_driveTrain :: getSpeeds,
+                m_driveTrain.getLeftPIDController(),
+                m_driveTrain.getRightPIDController(),
+                m_driveTrain :: setVoltageOutput,
+                m_driveTrain
+        );
+        CommandScheduler.getInstance().schedule(followTrajectory);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 
 }

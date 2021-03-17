@@ -19,7 +19,9 @@ public class TimedIntake extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Intake m_intake;
     private final Indexer m_indexer;
-    private double startTime, m_time;
+    private final double m_time;
+    private double startTime;
+
     /**
      * Creates a new ExampleCommand.
      *
@@ -47,7 +49,7 @@ public class TimedIntake extends CommandBase {
     @Override
     public void execute() {
         m_indexer.setIndexerOutput(1);
-        m_indexer.setKickerOutput(-0.25);
+        m_indexer.setKickerOutput(- 0.25);
         m_intake.setIntakePercentOutput(0.9);
     }
 
@@ -64,6 +66,6 @@ public class TimedIntake extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp()-startTime>m_time;
+        return Timer.getFPGATimestamp() - startTime > m_time;
     }
 }

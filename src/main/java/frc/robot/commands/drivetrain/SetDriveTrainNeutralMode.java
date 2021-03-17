@@ -1,14 +1,13 @@
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
 public class SetDriveTrainNeutralMode extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final DriveTrain m_driveTrain;
-    private int m_mode;
+    private final int m_mode;
+
     /**
      * Creates a new ExampleCommand.
      *

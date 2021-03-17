@@ -11,10 +11,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorSensorV3;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj.util.Color;
@@ -36,9 +34,9 @@ public class ColorSensor extends SubsystemBase {
     public boolean working = false;
     public int semiRotations = 0;
     public int realIntervals = 0;
-    private int colorID;
     public ColorSensorV3 sensor = new ColorSensorV3(I2C.Port.kOnboard);
     public TalonSRX motor = new TalonSRX(Constants.colorWheelMotor);
+    private int colorID;
 
     // ???
     public ColorSensor() {
@@ -61,28 +59,28 @@ public class ColorSensor extends SubsystemBase {
 
     // ???
     public int panelColor() { // none = 0; red = 1; green = 2; blue = 3; yellow = 4
-        if (practiceField) {
-            if (getColor().red > getColor().green && getColor().green * 1.8 > getColor().red) {
+        if(practiceField) {
+            if(getColor().red > getColor().green && getColor().green * 1.8 > getColor().red) {
                 return 1;
             }
-            if (getColor().red * 2.26 < getColor().green && getColor().blue * 2.16 < getColor().green) {
+            if(getColor().red * 2.26 < getColor().green && getColor().blue * 2.16 < getColor().green) {
                 return 2;
             }
-            if (getColor().blue * 1.25 > getColor().green && getColor().blue * 1.02 < getColor().green && getColor().blue > getColor().red * 1.89) {
+            if(getColor().blue * 1.25 > getColor().green && getColor().blue * 1.02 < getColor().green && getColor().blue > getColor().red * 1.89) {
                 return 3;
             }
-            if (getColor().red * 1.83 > getColor().green && getColor().red * 1.1 < getColor().green && getColor().red > getColor().blue * 1.86) {
+            if(getColor().red * 1.83 > getColor().green && getColor().red * 1.1 < getColor().green && getColor().red > getColor().blue * 1.86) {
                 return 4;
             } else
                 return 0;
         } else {
-            if (getColor().red > getColor().blue * 3 && getColor().red > getColor().green * 1.33) {
+            if(getColor().red > getColor().blue * 3 && getColor().red > getColor().green * 1.33) {
                 return 1;
-            } else if (getColor().green > getColor().red * 2.75 && getColor().green > getColor().blue * 1.8) {
+            } else if(getColor().green > getColor().red * 2.75 && getColor().green > getColor().blue * 1.8) {
                 return 2;
-            } else if (getColor().blue < getColor().green * 1.15 && getColor().green < getColor().blue * 1.15 && getColor().blue > getColor().red * 2.5) {
+            } else if(getColor().blue < getColor().green * 1.15 && getColor().green < getColor().blue * 1.15 && getColor().blue > getColor().red * 2.5) {
                 return 3;
-            } else if (getColor().green < getColor().red * 1.8 && getColor().green > getColor().red * 1.65) {
+            } else if(getColor().green < getColor().red * 1.8 && getColor().green > getColor().red * 1.65) {
                 return 4;
             } else
                 return 0;
@@ -107,15 +105,12 @@ public class ColorSensor extends SubsystemBase {
       return true;
     } else
       return false;*/
-        if (panelColor() != colorID && panelColor() != 0) {
+        if(panelColor() != colorID && panelColor() != 0) {
             colorID = panelColor();
             realIntervals++;
         }
-        if (realIntervals > 24)
-            return true;
-        else
-            return false;
-    }//Runs code if color sensor doesn't detect any color???
+        return realIntervals > 24;
+    }
 
     public void setOutput(double output) {
         motor.set(ControlMode.PercentOutput, output);
@@ -123,7 +118,7 @@ public class ColorSensor extends SubsystemBase {
 
     public int getFMSColor() {
         String message = DriverStation.getInstance().getGameSpecificMessage();
-        switch (message) {
+        switch(message) {
             case "R":
                 return 1;
             case "G":
@@ -133,7 +128,7 @@ public class ColorSensor extends SubsystemBase {
             case "Y":
                 return 4;
             default:
-                return -1;
+                return - 1;
         }
     }//returns a value that corresponds with a color based on the message
 
@@ -145,7 +140,7 @@ public class ColorSensor extends SubsystemBase {
         SmartDashboard.putNumber("Blue", getColor().blue);
         SmartDashboard.putNumber("IR", getIR());
         SmartDashboard.putNumber("Proximity", getProximity());
-        switch (panelColor()) {
+        switch(panelColor()) {
             case 1:
                 colorName = "Red";
                 break;

@@ -24,12 +24,13 @@ public class SetTurretSetpointFieldAbsoluteOld extends CommandBase {
     private final DriveTrain m_driveTrain;
     private final Vision m_vision;
     private final Climber m_climber;
-    private DoubleSupplier m_xInput;
-    private DoubleSupplier m_yInput;
-    double setpoint;
+    private final DoubleSupplier m_xInput;
+    private final DoubleSupplier m_yInput;
     private final double deadZone = 0.2;
+    double setpoint;
     boolean timeout = false;
     boolean turning, usingVisionSetpoint;
+    private boolean direction, directionTripped, joystickMoved;
 
     /**
      * Creates a new ExampleCommand.
@@ -46,8 +47,6 @@ public class SetTurretSetpointFieldAbsoluteOld extends CommandBase {
         addRequirements(turretSubsystem);
     }
 
-    private boolean direction, directionTripped, joystickMoved;
-
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
@@ -61,63 +60,63 @@ public class SetTurretSetpointFieldAbsoluteOld extends CommandBase {
 //        SmartDashboard.putBoolean("Joystick Moved", joystickMoved);
 //        SmartDashboard.putBoolean("Vision Setpoint", usingVisionSetpoint);
 
-        if (!m_climber.getClimbState()) {
-            if (m_turret.getControlMode() == 1) {
-                if ((Math.pow(m_xInput.getAsDouble(), 2) + Math.pow(m_yInput.getAsDouble(), 2)) >= Math.pow(deadZone, 2)) {
+        if(! m_climber.getClimbState()) {
+            if(m_turret.getControlMode() == 1) {
+                if((Math.pow(m_xInput.getAsDouble(), 2) + Math.pow(m_yInput.getAsDouble(), 2)) >= Math.pow(deadZone, 2)) {
                     m_vision.ledsOn();
                     m_vision.setLastValidTargetTime();
                     joystickMoved = true;
-                    if (!directionTripped) {
+                    if(! directionTripped) {
                         direction = m_yInput.getAsDouble() < 0;
                         directionTripped = true;
                     }
 
-                    if (direction) {
-                        if (m_xInput.getAsDouble() >= 0)
-                            setpoint = -Math.toDegrees(Math.atan2(-m_xInput.getAsDouble(), m_yInput.getAsDouble()));
+                    if(direction) {
+                        if(m_xInput.getAsDouble() >= 0)
+                            setpoint = - Math.toDegrees(Math.atan2(- m_xInput.getAsDouble(), m_yInput.getAsDouble()));
                         else
-                            setpoint = 360 - Math.toDegrees(Math.atan2(-m_xInput.getAsDouble(), m_yInput.getAsDouble()));
+                            setpoint = 360 - Math.toDegrees(Math.atan2(- m_xInput.getAsDouble(), m_yInput.getAsDouble()));
 
-                        if (setpoint > m_turret.getMaxAngle()) {
+                        if(setpoint > m_turret.getMaxAngle()) {
                             setpoint -= 360;
-                            if (setpoint < m_turret.getMinAngle())
+                            if(setpoint < m_turret.getMinAngle())
                                 setpoint = m_turret.getMinAngle();
                             direction = false;
                         }
                     } else {
-                        if (m_xInput.getAsDouble() < 0)
+                        if(m_xInput.getAsDouble() < 0)
                             setpoint = Math.toDegrees(Math.atan2(m_xInput.getAsDouble(), m_yInput.getAsDouble()));
                         else
-                            setpoint = -360 + Math.toDegrees(Math.atan2(m_xInput.getAsDouble(), m_yInput.getAsDouble()));
+                            setpoint = - 360 + Math.toDegrees(Math.atan2(m_xInput.getAsDouble(), m_yInput.getAsDouble()));
 
-                        if (setpoint < m_turret.getMinAngle()) {
+                        if(setpoint < m_turret.getMinAngle()) {
                             direction = true;
                             setpoint += 360;
-                            if (setpoint > m_turret.getMaxAngle())
+                            if(setpoint > m_turret.getMaxAngle())
                                 setpoint = m_turret.getMaxAngle();
                         }
                     }
-                } else if (m_vision.getValidTarget() && !joystickMoved) {
+                } else if(m_vision.getValidTarget() && ! joystickMoved) {
                     usingVisionSetpoint = true;
-                    if (!turning) {
+                    if(! turning) {
                         setpoint = m_turret.getTurretAngle() + m_vision.getTargetX();
 
-                        if (setpoint > m_turret.getMaxAngle()) {
+                        if(setpoint > m_turret.getMaxAngle()) {
                             setpoint -= 360;
-                            if (setpoint < m_turret.getMinAngle())
+                            if(setpoint < m_turret.getMinAngle())
                                 setpoint = m_turret.getMinAngle();
                             turning = true;
-                        } else if (setpoint < m_turret.getMinAngle()) {
+                        } else if(setpoint < m_turret.getMinAngle()) {
                             setpoint += 360;
-                            if (setpoint > m_turret.getMaxAngle())
+                            if(setpoint > m_turret.getMaxAngle())
                                 setpoint = m_turret.getMaxAngle();
                             turning = true;
                         }
                     } else {
-                        if (m_turret.onTarget())
+                        if(m_turret.onTarget())
                             turning = false;
                     }
-                } else if (!m_vision.getValidTarget() && !joystickMoved) {
+                } else if(! m_vision.getValidTarget() && ! joystickMoved) {
                     usingVisionSetpoint = false;
                     setpoint = m_turret.getTurretAngle();
                 } else {

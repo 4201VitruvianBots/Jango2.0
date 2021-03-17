@@ -7,9 +7,7 @@
 
 package frc.robot.commands.drivetrain;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Vision;
@@ -25,7 +23,7 @@ public class AlignToBall extends CommandBase {
     private final DriveTrain driveTrain;
     private final Vision vision;
     private final DoubleSupplier throttle;
-    private PIDController pid = new PIDController(P_TERM, I_TERM, D_TERM);
+    private final PIDController pid = new PIDController(P_TERM, I_TERM, D_TERM);
 
     public AlignToBall(DriveTrain driveTrain, Vision vision, DoubleSupplier throttle) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -44,7 +42,7 @@ public class AlignToBall extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (vision.hasPowerCell()) {
+        if(vision.hasPowerCell()) {
             double setpoint = driveTrain.getAngle() + vision.getPowerCellX();
 
             double leftVoltage = throttle.getAsDouble() * 12.0 + pid.calculate(driveTrain.getAngle(), setpoint);

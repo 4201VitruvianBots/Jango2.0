@@ -8,7 +8,6 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 
@@ -18,47 +17,48 @@ import java.util.function.DoubleSupplier;
  * An example command that uses an example subsystem.
  */
 public class SetArcadeDrive extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveTrain m_driveTrain;
-  private final Intake m_intake;
-  private final DoubleSupplier m_throttle, m_turn;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public SetArcadeDrive(DriveTrain driveTrain, Intake intake, DoubleSupplier throttle, DoubleSupplier turn) {
-    m_driveTrain = driveTrain;
-    m_intake = intake;
-    m_throttle = throttle;
-    m_turn = turn;
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final DriveTrain m_driveTrain;
+    private final Intake m_intake;
+    private final DoubleSupplier m_throttle, m_turn;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
-  }
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param subsystem The subsystem used by this command.
+     */
+    public SetArcadeDrive(DriveTrain driveTrain, Intake intake, DoubleSupplier throttle, DoubleSupplier turn) {
+        m_driveTrain = driveTrain;
+        m_intake = intake;
+        m_throttle = throttle;
+        m_turn = turn;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-  }
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(driveTrain);
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    double joystickY = (Math.abs(m_throttle.getAsDouble()) > 0.05) ? m_throttle.getAsDouble() : 0;
-    double joystickX = (Math.abs(m_turn.getAsDouble()) > 0.05) ? m_turn.getAsDouble() : 0;
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        double joystickY = (Math.abs(m_throttle.getAsDouble()) > 0.05) ? m_throttle.getAsDouble() : 0;
+        double joystickX = (Math.abs(m_turn.getAsDouble()) > 0.05) ? m_turn.getAsDouble() : 0;
 
 //        double throttle = 0.5 * (joystickY + Math.pow(joystickY, 3));
 //        throttle = throttle < 0 ? Math.max( -0.7, throttle) : throttle;
 //        double turn = 0.25 *(joystickX + Math.pow(joystickX, 3));
-    double throttle = joystickY;
-    throttle = throttle < 0 ? Math.max(-0.7, throttle) : throttle;
-    double turn = (m_driveTrain.getDriveShifterStatus() ? 0.5 : 0.35) * joystickX;
+        double throttle = joystickY;
+        throttle = throttle < 0 ? Math.max(- 0.7, throttle) : throttle;
+        double turn = (m_driveTrain.getDriveShifterStatus() ? 0.5 : 0.35) * joystickX;
 
 //    if(m_intake.getIntakingState())
 //      throttle = - throttle;
 
-    m_driveTrain.setMotorArcadeDrive(throttle, turn);
+        m_driveTrain.setMotorArcadeDrive(throttle, turn);
 //    if (Robot.climber.climbMode == 1) {
 //      double operatorThrottle = Math.abs(Robot.m_oi.getXBoxRightY()) > 0.05 ? Robot.m_oi.getXBoxRightY() : 0;
 //      Robot.driveTrain.setClimbMotorPercentOutput(Math.min(throttle + operatorThrottle, 0.5));
@@ -71,16 +71,16 @@ public class SetArcadeDrive extends CommandBase {
 //        throttle = Robot.elevator.getHeight() > 30 ? Math.min(Math.max(throttle, -0.4), 0.5) : throttle;
 //      Robot.driveTrain.setMotorArcadeDrive(throttle, turn);
 //    }
-  }
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

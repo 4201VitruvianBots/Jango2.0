@@ -112,7 +112,7 @@ public class BadLogger {
     }
 
     private void initTopics() {
-	    m_robotContainer.initalizeLogTopics();
+	    m_robotContainer.initializeLogTopics();
     }
 
     public void stopLogger() {

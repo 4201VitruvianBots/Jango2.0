@@ -11,51 +11,49 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Intake;
-
-import java.util.function.DoubleSupplier;
 
 /**
  * An example command that uses an example subsystem.
  */
 public class ResetOdometry extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveTrain m_driveTrain;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param driveTrain The subsystem used by this command.
-   */
-  public ResetOdometry(DriveTrain driveTrain) {
-    m_driveTrain = driveTrain;
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final DriveTrain m_driveTrain;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
-  }
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param driveTrain The subsystem used by this command.
+     */
+    public ResetOdometry(DriveTrain driveTrain) {
+        m_driveTrain = driveTrain;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    m_driveTrain.resetOdometry(new Pose2d(), new Rotation2d());
-    m_driveTrain.resetEncoderCounts();
-    m_driveTrain.resetAngle();
-  }
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(driveTrain);
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        m_driveTrain.resetOdometry(new Pose2d(), new Rotation2d());
+        m_driveTrain.resetEncoderCounts();
+        m_driveTrain.resetAngle();
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
 
 
-  }
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return true;
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

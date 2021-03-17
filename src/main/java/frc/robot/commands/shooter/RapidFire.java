@@ -21,9 +21,9 @@ public class RapidFire extends CommandBase {
     private final Shooter m_shooter;
     private final Indexer m_indexer;
     private final Intake m_intake;
+    private final double m_rpm;
     private double startTime, timestamp;
     private boolean timerStart;
-    private double m_rpm;
 
     /**
      * Creates a new ExampleCommand.
@@ -52,16 +52,16 @@ public class RapidFire extends CommandBase {
     public void execute() {
         m_shooter.setRPM(m_rpm);
 
-        if (Math.abs(m_rpm - m_shooter.getTestRPM()) < m_shooter.getRPMTolerance() && !timerStart) {
+        if(Math.abs(m_rpm - m_shooter.getTestRPM()) < m_shooter.getRPMTolerance() && ! timerStart) {
             timerStart = true;
             timestamp = Timer.getFPGATimestamp();
-        } else if (Math.abs(m_shooter.getRPM(0) - m_shooter.getTestRPM()) > m_shooter.getRPMTolerance() && timerStart) {
+        } else if(Math.abs(m_shooter.getRPM(0) - m_shooter.getTestRPM()) > m_shooter.getRPMTolerance() && timerStart) {
             timestamp = 0;
             timerStart = false;
         }
 
-        if (timestamp != 0 || Timer.getFPGATimestamp() - startTime > 3)
-            if (timerStart && Timer.getFPGATimestamp() - timestamp > 0.1 || Timer.getFPGATimestamp() - startTime > 2) {
+        if(timestamp != 0 || Timer.getFPGATimestamp() - startTime > 3)
+            if(timerStart && Timer.getFPGATimestamp() - timestamp > 0.1 || Timer.getFPGATimestamp() - startTime > 2) {
                 m_indexer.setIndexerOutput(1);
                 m_indexer.setKickerOutput(1);
                 m_intake.setIntakePercentOutput(1);

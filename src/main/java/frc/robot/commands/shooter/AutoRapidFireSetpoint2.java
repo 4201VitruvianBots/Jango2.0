@@ -21,7 +21,8 @@ public class AutoRapidFireSetpoint2 extends CommandBase {
     private final Shooter m_shooter;
     private final Indexer m_indexer;
     private final Intake m_intake;
-    private double startTime, m_shootTimeout;
+    private final double m_shootTimeout;
+    private double startTime;
     private boolean timerStart;
 
     /**
@@ -50,9 +51,9 @@ public class AutoRapidFireSetpoint2 extends CommandBase {
     @Override
     public void execute() {
 //        if (m_shooter.canShoot() || (Timer.getFPGATimestamp() - startTime) > m_shootTimeout) {
-            m_indexer.setIndexerOutput(1);
-            m_indexer.setKickerOutput(1);
-            m_intake.setIntakePercentOutput(1);
+        m_indexer.setIndexerOutput(1);
+        m_indexer.setKickerOutput(1);
+        m_intake.setIntakePercentOutput(1);
 //        }
     }
 

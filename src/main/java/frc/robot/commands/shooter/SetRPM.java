@@ -16,47 +16,47 @@ import frc.robot.subsystems.Shooter;
  * An example command that uses an example subsystem.
  */
 public class SetRPM extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Shooter m_shooter;
-  private final double m_RPM;
-  private double time;
-  private boolean printed = false;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   */
-  public SetRPM(Shooter shooter, double RPM) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_shooter = shooter;
-    m_RPM = RPM;
-    addRequirements(shooter);
-  }
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final Shooter m_shooter;
+    private final double m_RPM;
+    private double time;
+    private boolean printed = false;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-      time = Timer.getFPGATimestamp();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_shooter.setRPM(m_RPM);
-    if(m_shooter.encoderAtSetpoint(0) && printed == false){
-        SmartDashboard.putNumber("Time to Setpoint", Timer.getFPGATimestamp()-time);
-        printed = true;
+    /**
+     * Creates a new ExampleCommand.
+     */
+    public SetRPM(Shooter shooter, double RPM) {
+        // Use addRequirements() here to declare subsystem dependencies.
+        m_shooter = shooter;
+        m_RPM = RPM;
+        addRequirements(shooter);
     }
-  }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_shooter.setPower(0);
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        time = Timer.getFPGATimestamp();
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return (false);
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        m_shooter.setRPM(m_RPM);
+        if(m_shooter.encoderAtSetpoint(0) && printed == false) {
+            SmartDashboard.putNumber("Time to Setpoint", Timer.getFPGATimestamp() - time);
+            printed = true;
+        }
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        m_shooter.setPower(0);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return (false);
+    }
 }

@@ -27,70 +27,71 @@ import java.util.ArrayList;
  * An example command that uses an example subsystem.
  */
 public class TestPathFollowing extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveTrain m_driveTrain;
-  private Trajectory trajectory;
-  private static double m_period = 0.02;
-  private Notifier m_notifier;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param driveTrain The subsystem used by this command.
-   */
-  public TestPathFollowing(DriveTrain driveTrain) {
-    m_driveTrain = driveTrain;
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+    private static final double m_period = 0.02;
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final DriveTrain m_driveTrain;
+    private Trajectory trajectory;
+    private Notifier m_notifier;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    m_driveTrain.resetEncoderCounts();
-    m_driveTrain.resetAngle();
-    m_driveTrain.resetOdometry(new Pose2d(), new Rotation2d());
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param driveTrain The subsystem used by this command.
+     */
+    public TestPathFollowing(DriveTrain driveTrain) {
+        m_driveTrain = driveTrain;
+        // Use addRequirements() here to declare subsystem dependencies.
+    }
 
-    var startPosition = new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0), Rotation2d.fromDegrees(0));
-    var stopPosition = new Pose2d(Units.feetToMeters(6), Units.feetToMeters(0), Rotation2d.fromDegrees(0));
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        m_driveTrain.resetEncoderCounts();
+        m_driveTrain.resetAngle();
+        m_driveTrain.resetOdometry(new Pose2d(), new Rotation2d());
 
-    var trajectoryWaypoints = new ArrayList<Pose2d>();
-    trajectoryWaypoints.add(startPosition);
-    trajectoryWaypoints.add(stopPosition);
+        var startPosition = new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0), Rotation2d.fromDegrees(0));
+        var stopPosition = new Pose2d(Units.feetToMeters(6), Units.feetToMeters(0), Rotation2d.fromDegrees(0));
 
-
-    var trajectoryConstraints = new DifferentialDriveKinematicsConstraint(m_driveTrain.getDriveTrainKinematics(),
-                                                    3);
+        var trajectoryWaypoints = new ArrayList<Pose2d>();
+        trajectoryWaypoints.add(startPosition);
+        trajectoryWaypoints.add(stopPosition);
 
 
-    var trajectoryConfig = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(4));
+        var trajectoryConstraints = new DifferentialDriveKinematicsConstraint(m_driveTrain.getDriveTrainKinematics(),
+                3);
 
-    trajectoryConfig.setReversed(true);
 
-    trajectory = TrajectoryGenerator.generateTrajectory(trajectoryWaypoints, trajectoryConfig);
+        var trajectoryConfig = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(4));
 
-    RamseteCommand followTrajectory = new RamseteCommand(
-            trajectory,
-            m_driveTrain::getRobotPose,
-            new RamseteController(),
-            m_driveTrain.getFeedforward(),
-            m_driveTrain.getDriveTrainKinematics(),
-            m_driveTrain::getSpeeds,
-            m_driveTrain.getLeftPIDController(),
-            m_driveTrain.getRightPIDController(),
-            m_driveTrain::setVoltageOutput,
-            m_driveTrain
-    );
-    CommandScheduler.getInstance().schedule(followTrajectory);
-  }
+        trajectoryConfig.setReversed(true);
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
+        trajectory = TrajectoryGenerator.generateTrajectory(trajectoryWaypoints, trajectoryConfig);
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+        RamseteCommand followTrajectory = new RamseteCommand(
+                trajectory,
+                m_driveTrain :: getRobotPose,
+                new RamseteController(),
+                m_driveTrain.getFeedforward(),
+                m_driveTrain.getDriveTrainKinematics(),
+                m_driveTrain :: getSpeeds,
+                m_driveTrain.getLeftPIDController(),
+                m_driveTrain.getRightPIDController(),
+                m_driveTrain :: setVoltageOutput,
+                m_driveTrain
+        );
+        CommandScheduler.getInstance().schedule(followTrajectory);
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 
 }

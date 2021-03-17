@@ -7,12 +7,8 @@
 
 package frc.robot.commands.turret;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
 
@@ -26,6 +22,7 @@ public class AutoUseVisionCorrection extends CommandBase {
     boolean turning, usingVisionSetpoint;
     private double setpoint;
     private double startTime;
+
     /**
      * Creates a new ExampleCommand.
      */
@@ -45,29 +42,29 @@ public class AutoUseVisionCorrection extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_turret.getControlMode() == 1) {
-            if (m_vision.getValidTarget()) {
+        if(m_turret.getControlMode() == 1) {
+            if(m_vision.getValidTarget()) {
                 usingVisionSetpoint = true;
-                if (!turning) {
+                if(! turning) {
                     m_vision.ledsOn();
                     setpoint = m_turret.getTurretAngle() + m_vision.getTargetX();
 
-                    if (setpoint > m_turret.getMaxAngle()) {
+                    if(setpoint > m_turret.getMaxAngle()) {
                         setpoint -= 360;
-                        if (setpoint < m_turret.getMinAngle())
+                        if(setpoint < m_turret.getMinAngle())
                             setpoint = m_turret.getMinAngle();
                         turning = true;
-                    } else if (setpoint < m_turret.getMinAngle()) {
+                    } else if(setpoint < m_turret.getMinAngle()) {
                         setpoint += 360;
-                        if (setpoint > m_turret.getMaxAngle())
+                        if(setpoint > m_turret.getMaxAngle())
                             setpoint = m_turret.getMaxAngle();
                         turning = true;
                     }
                 } else {
-                    if (m_turret.onTarget())
+                    if(m_turret.onTarget())
                         turning = false;
                 }
-            } else if (!m_vision.getValidTarget()) {
+            } else if(! m_vision.getValidTarget()) {
                 usingVisionSetpoint = false;
                 setpoint = m_turret.getTurretAngle();
             }
