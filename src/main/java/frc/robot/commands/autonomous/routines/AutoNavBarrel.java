@@ -46,13 +46,15 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 new Pose2d(Units.inchesToMeters(176), Units.inchesToMeters(45), new Rotation2d(Units.degreesToRadians(-120))),
                 new Pose2d(Units.inchesToMeters(124), Units.inchesToMeters(45), new Rotation2d(Units.degreesToRadians(120))),
                 new Pose2d(Units.inchesToMeters(150), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(0))),
-                new Pose2d(Units.inchesToMeters(240), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(0))),
-                new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(120), new Rotation2d(Units.degreesToRadians(90))),
+                new Pose2d(Units.inchesToMeters(240), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(30))),
+                new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(135), new Rotation2d(Units.degreesToRadians(135))),
+//                new Pose2d(Units.inchesToMeters(240), Units.inchesToMeters(144), new Rotation2d (Units.degreesToRadians(180))),
                 new Pose2d(Units.inchesToMeters(210), Units.inchesToMeters(120), new Rotation2d(Units.degreesToRadians(-90))),
-                new Pose2d(Units.inchesToMeters(285), Units.inchesToMeters(34), new Rotation2d(Units.degreesToRadians(0))),
-                new Pose2d(Units.inchesToMeters(330), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(90))),
+                new Pose2d(Units.inchesToMeters(260), Units.inchesToMeters(54), new Rotation2d(Units.degreesToRadians(-45))),
+                new Pose2d(Units.inchesToMeters(338), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(45))),
                 new Pose2d(Units.inchesToMeters(285), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(180))),
-                new Pose2d(Units.inchesToMeters(30), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(180)))
+                new Pose2d(Units.inchesToMeters(140), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(180))), //change x to 180?
+                new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(180)))
         };
 
         Pose2d startPosition = waypoints[0];
@@ -73,6 +75,15 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                         configA.setEndVelocity(configA.getMaxVelocity());
                         configA.setStartVelocity(configA.getMaxVelocity());
                 }
+
+                if (i == 1) {
+                    configA.setEndVelocity(Units.feetToMeters(4.5));
+                }
+
+                if (i == 2) {
+                    configA.setStartVelocity(Units.feetToMeters(4.5));
+                }
+
                 if (i == waypoints.length - 2) {
                         configA.setEndVelocity(0);
                 }

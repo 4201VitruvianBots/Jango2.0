@@ -115,7 +115,7 @@ public class RobotContainer {
         None
     }
 
-    private SkillsChallengeSelector selectedSkillsChallenge = SkillsChallengeSelector.AUTO_NAV_BOUNCE; // Change this
+    private SkillsChallengeSelector selectedSkillsChallenge = SkillsChallengeSelector.AUTO_NAV_BARREL; // Change this
 
     private FieldSim m_FieldSim;
 

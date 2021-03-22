@@ -48,7 +48,7 @@ public class DriveTrain extends SubsystemBase {
     private final double kV = DriveConstants.kvVoltSecondsPerMeter;
     private final double kA = DriveConstants.kaVoltSecondsSquaredPerMeter;;
 
-    public double kP = 1.94;//Constants.DriveConstants.inSlowGear ? 1.89 : 2.74; //1.33
+    public double kP = 2.37;//3/21/21//Constants.DriveConstants.inSlowGear ? 1.89 : 2.74; //1.33
     public double kI = 0;
     public double kD = 0;
     public int controlMode = 0;
@@ -448,6 +448,7 @@ public class DriveTrain extends SubsystemBase {
         Shuffleboard.getTab("Drive Train").addNumber("rightSpeed", () ->
                 Units.metersToFeet(getSpeeds().rightMetersPerSecond));
 
+
         Shuffleboard.getTab("Turret").addNumber("Robot Angle", navX :: getAngle);
     }
 
@@ -464,6 +465,8 @@ public class DriveTrain extends SubsystemBase {
                     Units.metersToFeet(getSpeeds().leftMetersPerSecond));
             SmartDashboardTab.putNumber("DriveTrain", "rightSpeed",
                     Units.metersToFeet(getSpeeds().rightMetersPerSecond));
+            SmartDashboardTab.putBoolean("DriveTrain","high gear",
+                    getDriveShifterStatus());
 
             SmartDashboardTab.putNumber("Turret", "Robot Angle", getAngle());
         } else {
