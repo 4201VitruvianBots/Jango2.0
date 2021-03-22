@@ -40,13 +40,13 @@ import java.util.List;
 public class GalacticSearchB extends SequentialCommandGroup {
     public GalacticSearchB(DriveTrain driveTrain, FieldSim fieldSim) {
         int[][] waypointsRaw = {
-            {15,90,180},
-            {90,120,-160},
-            {150,60,135},
-            {180,60,-160},
-            {210,120,-140},
-            {300,60,135},
-            {345,90,180}
+                {15,90,180},
+                {90,120,-160},
+                {150,60,150},
+                {180,60,-150},
+                {210,120,-130},
+                {300,60,135},
+                {345,90,180}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
         for (int j = 0; j < waypointsRaw.length; j++) {

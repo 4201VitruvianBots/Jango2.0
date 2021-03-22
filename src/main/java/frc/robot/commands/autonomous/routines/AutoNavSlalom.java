@@ -25,20 +25,24 @@ import java.util.List;
 
 public class AutoNavSlalom extends SequentialCommandGroup {
     public AutoNavSlalom(DriveTrain driveTrain, FieldSim fieldSim) {
-        Pose2d[] waypoints = {
-                new Pose2d(Units.inchesToMeters(40), Units.inchesToMeters(30), new Rotation2d(Units.degreesToRadians(0))),
-                //new Pose2d(Units.inchesToMeters(90), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(60))),
-                new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(0))),
-                new Pose2d(Units.inchesToMeters(225), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(0))),
-                //new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(-45))),
-                new Pose2d(Units.inchesToMeters(300), Units.inchesToMeters(34), new Rotation2d(Units.degreesToRadians(0))),
-                new Pose2d(Units.inchesToMeters(315), Units.inchesToMeters(86), new Rotation2d(Units.degreesToRadians(150))),
-                //new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(225))),
-                new Pose2d(Units.inchesToMeters(225), Units.inchesToMeters(30), new Rotation2d(Units.degreesToRadians(180))),
-                new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(30), new Rotation2d(Units.degreesToRadians(180))),
-                //new Pose2d(Units.inchesToMeters(90), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(120))),
-                new Pose2d(Units.inchesToMeters(40), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(150)))    
+        int[][] waypointsRaw = {
+                {40,30,0},
+                // {90,60,60},
+                {120,90,0},
+                {225,90,0},
+                // {270,60,-45},
+                {300,34,0},
+                {315,86,150},
+                // {270,60,225},
+                {225,30,180},
+                {120,30,180},
+                // {90,60,120},
+                {40,90,150}
         };
+        Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
+        for (int j = 0; j < waypointsRaw.length; j++) {
+                waypoints[j] = new Pose2d(Units.inchesToMeters(waypointsRaw[j][0]), Units.inchesToMeters(waypointsRaw[j][1]), new Rotation2d(Units.degreesToRadians(waypointsRaw[j][2])));
+        }
         
         Pose2d startPosition = waypoints[0];
 

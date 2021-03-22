@@ -39,18 +39,22 @@ import java.util.List;
 
 public class AutoNavBounce extends SequentialCommandGroup {
     public AutoNavBounce(DriveTrain driveTrain, FieldSim fieldSim) {
-        Pose2d[] waypoints = {
-            new Pose2d(Units.inchesToMeters(30), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(0))),
-            new Pose2d(Units.inchesToMeters(90), Units.inchesToMeters(150), new Rotation2d(Units.degreesToRadians(90))),
-            new Pose2d(Units.inchesToMeters(105), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(120))),
-            new Pose2d(Units.inchesToMeters(150), Units.inchesToMeters(40), new Rotation2d(Units.degreesToRadians(180))),
-            new Pose2d(Units.inchesToMeters(180), Units.inchesToMeters(139), new Rotation2d(Units.degreesToRadians(-90))),
-            new Pose2d(Units.inchesToMeters(211), Units.inchesToMeters(30), new Rotation2d(Units.degreesToRadians(0))),
-            new Pose2d(Units.inchesToMeters(252), Units.inchesToMeters(30), new Rotation2d(Units.degreesToRadians(0))),
-            new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(147), new Rotation2d(Units.degreesToRadians(90))),       
-            new Pose2d(Units.inchesToMeters(315), Units.inchesToMeters(100), new Rotation2d(Units.degreesToRadians(160))),
+        int[][] waypointsRaw = {
+                {30,90,0},
+                {90,150,90},
+                {105,90,120},
+                {150,40,180},
+                {180,139,-90},
+                {211,30,0},
+                {252,30,0},
+                {270,147,90},
+                {315,100,160}
         };
-
+        Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
+        for (int j = 0; j < waypointsRaw.length; j++) {
+                waypoints[j] = new Pose2d(Units.inchesToMeters(waypointsRaw[j][0]), Units.inchesToMeters(waypointsRaw[j][1]), new Rotation2d(Units.degreesToRadians(waypointsRaw[j][2])));
+        }
+        
         boolean[] pathIsReversed = {false, true, true, true, false, false, false, true};
         Pose2d startPosition = waypoints[0];
 
