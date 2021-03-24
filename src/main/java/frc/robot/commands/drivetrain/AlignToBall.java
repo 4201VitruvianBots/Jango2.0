@@ -44,8 +44,8 @@ public class AlignToBall extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (vision.hasPowerCell()) {
-            double setpoint = driveTrain.getAngle() + vision.getPowerCellX();
+        if (vision.getPowercellX() != 0) { // Needs to be determined by testing
+            double setpoint = driveTrain.getAngle() + vision.getPowercellX();
 
             double leftVoltage = throttle.getAsDouble() * 12.0 + pid.calculate(driveTrain.getAngle(), setpoint);
             double rightVoltage = throttle.getAsDouble() * 12.0 - pid.calculate(driveTrain.getAngle(), setpoint);
