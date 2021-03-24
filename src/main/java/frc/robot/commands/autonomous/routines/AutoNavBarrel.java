@@ -74,18 +74,18 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 new SetDriveNeutralMode(driveTrain, 0));
 
         for(int i = 0; i < waypoints.length - 1; i++) {
+                configA.setEndVelocity(configA.getMaxVelocity());
                 if (i != 0) {
-                        configA.setEndVelocity(configA.getMaxVelocity());
                         configA.setStartVelocity(configA.getMaxVelocity());
                 }
 
-                if (i == 1) {
-                    configA.setEndVelocity(Units.feetToMeters(4.5));
-                }
-
-                if (i == 2) {
-                    configA.setStartVelocity(Units.feetToMeters(4.5));
-                }
+//                if (i == 0) {
+//                    configA.setEndVelocity(Units.feetToMeters(4.5));
+//                }
+//
+//                if (i == 1) {
+//                    configA.setStartVelocity(Units.feetToMeters(4.5));
+//                }
 
                 if (i == waypoints.length - 2) {
                         configA.setEndVelocity(0);
