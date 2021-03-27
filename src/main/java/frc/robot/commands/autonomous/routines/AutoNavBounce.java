@@ -41,14 +41,14 @@ public class AutoNavBounce extends SequentialCommandGroup {
     public AutoNavBounce(DriveTrain driveTrain, FieldSim fieldSim) {
         int[][] waypointsRaw = {
                 {30,90,0},
-                {90,150,90},
-                {105,90,120},
-                {150,40,180},
-                {180,139,-90},
-                {211,30,0},
-                {252,30,0},
-                {270,147,90},
-                {315,100,160}
+                {80,150,90},
+                {115,85,100},
+                {150, 37,180},
+                {180,150,-90},
+                {180, 80, -90},
+                {260,30,30},
+                {270,156,90},
+                {310,90,135}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
         for (int j = 0; j < waypointsRaw.length; j++) {
@@ -59,7 +59,7 @@ public class AutoNavBounce extends SequentialCommandGroup {
         Pose2d startPosition = waypoints[0];
 
 
-        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(10));
+        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(5));
         configA.setReversed(false);
         //configA.setEndVelocity(configA.getMaxVelocity());
         configA.addConstraint(new DifferentialDriveKinematicsConstraint(driveTrain.getDriveTrainKinematics(), configA.getMaxVelocity()));
@@ -70,8 +70,8 @@ public class AutoNavBounce extends SequentialCommandGroup {
                 new SetOdometry(driveTrain, fieldSim, startPosition),
                 new SetDriveNeutralMode(driveTrain, 0));
 
-        double[] startVelocities = {configA.getMaxVelocity(), 0, configA.getMaxVelocity(), configA.getMaxVelocity(), 0, 
-                configA.getMaxVelocity(), configA.getMaxVelocity(), 0, 0};
+        double[] startVelocities = {0, 0, configA.getMaxVelocity(), configA.getMaxVelocity(), 0,
+                configA.getMaxVelocity(), configA.getMaxVelocity(), configA.getMaxVelocity(), 0};
         double[] endVelocities = {0, configA.getMaxVelocity(), configA.getMaxVelocity(), 0, configA.getMaxVelocity(), 
                 configA.getMaxVelocity(), 0, 0};
 

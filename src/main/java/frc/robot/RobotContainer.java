@@ -115,7 +115,7 @@ public class RobotContainer {
         None
     }
 
-    private SkillsChallengeSelector selectedSkillsChallenge = SkillsChallengeSelector.AUTO_NAV_BARREL; // Change this
+    private SkillsChallengeSelector selectedSkillsChallenge = SkillsChallengeSelector.AUTO_NAV_SLALOM; // Change this
 
     private FieldSim m_FieldSim;
 
@@ -339,7 +339,7 @@ public class RobotContainer {
         if(RobotBase.isReal()) {
             m_driveTrain.resetEncoderCounts();
             m_driveTrain.resetOdometry(m_FieldSim.getRobotPose(), m_FieldSim.getRobotPose().getRotation());
-            m_driveTrain.setDriveTrainNeutralMode(2); // All in coast; change this maybe
+            m_driveTrain.setDriveTrainNeutralMode(0); // Half and half
         } else {
             m_driveTrain.resetEncoderCounts();
             m_driveTrain.resetOdometry(m_FieldSim.getRobotPose(), m_FieldSim.getRobotPose().getRotation());
