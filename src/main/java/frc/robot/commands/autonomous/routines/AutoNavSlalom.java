@@ -29,15 +29,18 @@ public class AutoNavSlalom extends SequentialCommandGroup {
                 {40,30,0},
                 // {90,60,60},
                 {120,90,0},
-                {240,90,0},
-                {270,60,-45},
+                {245,90,0},
+                {276,60,-60},
+//                {286,50,-45},
                 {300,30,0},
-                {315,86,120},
-                {270,60,225},
-                {225,30,180},
-                {120,30,180},
-                {90,60,135},
-                {40,90,150}
+                {360,60,90},
+                {320,80,180},
+                {280,60,270},
+                {240,15,180},
+//                {200,15,180},
+                {135,15,180},
+                {96,60,90},
+                {30,90,180}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
         for (int j = 0; j < waypointsRaw.length; j++) {
@@ -46,7 +49,7 @@ public class AutoNavSlalom extends SequentialCommandGroup {
         
         Pose2d startPosition = waypoints[0];
 
-        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(5));
+        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(2));
         configA.setReversed(false);
         //configA.setEndVelocity(configA.getMaxVelocity());
         configA.addConstraint(new DifferentialDriveKinematicsConstraint(driveTrain.getDriveTrainKinematics(), configA.getMaxVelocity()));
@@ -70,17 +73,19 @@ public class AutoNavSlalom extends SequentialCommandGroup {
                 new SetDriveNeutralMode(driveTrain, 0));
 
         for(int i = 0; i < waypoints.length - 1; i++) {
-                if (i != 0) {
-                        configA.setEndVelocity(configA.getMaxVelocity() / 2);
-                        configA.setStartVelocity(configA.getMaxVelocity() / 2);
-                }
-                if (i == waypoints.length - 2) {
-                        configA.setEndVelocity(0);
-                }
-                Trajectory trajectory = TrajectoryGenerator.generateTrajectory(waypoints[i],
-                List.of(),
-                waypoints[i + 1],
-                configA);
+
+            configA.setEndVelocity(Units.feetToMeters(3));
+            if (i != 0) {
+                configA.setStartVelocity(Units.feetToMeters(3));
+            }
+
+            if (i == waypoints.length - 2) {
+                configA.setEndVelocity(0);
+            }
+            Trajectory trajectory = TrajectoryGenerator.generateTrajectory(waypoints[i],
+            List.of(),
+            waypoints[i + 1],
+            configA);
 
 
             var command = TrajectoryUtils.generateRamseteCommand(driveTrain, trajectory);

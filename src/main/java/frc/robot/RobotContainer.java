@@ -115,7 +115,7 @@ public class RobotContainer {
         None
     }
 
-    private SkillsChallengeSelector selectedSkillsChallenge = SkillsChallengeSelector.AUTO_NAV_SLALOM; // Change this
+    private SkillsChallengeSelector selectedSkillsChallenge = SkillsChallengeSelector.AUTO_NAV_BOUNCE; // Change this
 
     private FieldSim m_FieldSim;
 
@@ -253,10 +253,10 @@ public class RobotContainer {
         xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
         xBoxLeftTrigger.whileHeld(new ControlledIntake(m_intake, m_indexer, xBoxController)); // Deploy intake
 
-        xBoxButtons[1].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3575));                          // B - Set RPM Medium
+        xBoxButtons[1].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3410));//blue                  // B - Set RPM Medium
         xBoxButtons[2].whileHeld(new EjectAll(m_indexer, m_intake));                                  // X - Eject All
-        xBoxButtons[3].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3900));                          // Y - Set RPM Far
-        xBoxButtons[0].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3800));                          // A - Set RPM Close
+        xBoxButtons[3].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3900));//yellow                     // Y - Set RPM Far
+        xBoxButtons[0].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3575));//red                 // A - Set RPM Close
 
         //xBoxButtons[5].whileHeld(new RapidFire(m_shooter, m_indexer, m_intake, 3700));              // Set Distance RPM
         xBoxRightTrigger.whileHeld(new RapidFireSetpoint(m_shooter, m_indexer, m_intake));            // flywheel on toggle

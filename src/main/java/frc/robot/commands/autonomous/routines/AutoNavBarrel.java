@@ -44,16 +44,15 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 {40,90,0},
                 {150,90,0},
                 {176,45,-120},
-                {124,45,120},
+                {135,45,120},
                 {150,90,0},
-                {240,90,30},
+                {250,90,30},
                 {270,135,135},
                 {210,120,-90},
-                {260,54,-45},
-                {338,60,45},
-                {285,90,180},
-                {140,0,0},
-                {30,90,180}
+                {290,45,-45},
+                {330,45,45},
+                {300,90,180},
+                {0,90,180}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
         for (int j = 0; j < waypointsRaw.length; j++) {
@@ -62,7 +61,7 @@ public class AutoNavBarrel extends SequentialCommandGroup {
 
         Pose2d startPosition = waypoints[0];
 
-        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(9), Units.feetToMeters(6));
+        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(6));
         configA.setReversed(false);
         //configA.setEndVelocity(configA.getMaxVelocity());
         configA.addConstraint(new DifferentialDriveKinematicsConstraint(driveTrain.getDriveTrainKinematics(), configA.getMaxVelocity()));
@@ -74,9 +73,9 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 new SetDriveNeutralMode(driveTrain, 0));
 
         for(int i = 0; i < waypoints.length - 1; i++) {
-                configA.setEndVelocity(configA.getMaxVelocity());
+                configA.setEndVelocity(configA.getMaxVelocity()/3);
                 if (i != 0) {
-                        configA.setStartVelocity(configA.getMaxVelocity());
+                        configA.setStartVelocity(configA.getMaxVelocity()/3);
                 }
 
 //                if (i == 0) {

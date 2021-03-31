@@ -41,13 +41,13 @@ public class AutoNavBounce extends SequentialCommandGroup {
     public AutoNavBounce(DriveTrain driveTrain, FieldSim fieldSim) {
         int[][] waypointsRaw = {
                 {30,90,0},
-                {80,150,90},
+                {80,146,90},
                 {115,85,100},
                 {150, 37,180},
-                {180,150,-90},
+                {180,140,-90},
                 {180, 80, -90},
                 {260,30,30},
-                {270,156,90},
+                {270,140,90},
                 {310,90,135}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
@@ -70,10 +70,10 @@ public class AutoNavBounce extends SequentialCommandGroup {
                 new SetOdometry(driveTrain, fieldSim, startPosition),
                 new SetDriveNeutralMode(driveTrain, 0));
 
-        double[] startVelocities = {0, 0, configA.getMaxVelocity(), configA.getMaxVelocity(), 0,
-                configA.getMaxVelocity(), configA.getMaxVelocity(), configA.getMaxVelocity(), 0};
-        double[] endVelocities = {0, configA.getMaxVelocity(), configA.getMaxVelocity(), 0, configA.getMaxVelocity(), 
-                configA.getMaxVelocity(), 0, 0};
+        double[] startVelocities = {0, 0, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0,
+                configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0};
+        double[] endVelocities = {0, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0, configA.getMaxVelocity()/3,
+                configA.getMaxVelocity()/3, 0, 0};
 
         for(int i = 0; i < waypoints.length - 1; i++) {
                 configA.setStartVelocity(startVelocities[i]);
