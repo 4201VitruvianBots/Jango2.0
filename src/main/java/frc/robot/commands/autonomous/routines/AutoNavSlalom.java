@@ -72,16 +72,15 @@ public class AutoNavSlalom extends SequentialCommandGroup {
                 new SetOdometry(driveTrain, fieldSim, startPosition),
                 new SetDriveNeutralMode(driveTrain, 0));
 
+        double[] startVelocities = {0, configA.getMaxVelocity(), configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3,
+                configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0};
+        double[] endVelocities = {configA.getMaxVelocity(), configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3,
+                configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0};
+
         for(int i = 0; i < waypoints.length - 1; i++) {
+            configA.setStartVelocity(startVelocities[i]);
+            configA.setEndVelocity(endVelocities[i]);
 
-            configA.setEndVelocity(Units.feetToMeters(3));
-            if (i != 0) {
-                configA.setStartVelocity(Units.feetToMeters(3));
-            }
-
-            if (i == waypoints.length - 2) {
-                configA.setEndVelocity(0);
-            }
             Trajectory trajectory = TrajectoryGenerator.generateTrajectory(waypoints[i],
             List.of(),
             waypoints[i + 1],

@@ -72,23 +72,15 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 new SetOdometry(driveTrain, fieldSim, startPosition),
                 new SetDriveNeutralMode(driveTrain, 0));
 
+        double[] startVelocities = {0, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3,
+                        configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0};
+        double[] endVelocities = {configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3,
+                        configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0};
+
         for(int i = 0; i < waypoints.length - 1; i++) {
-                configA.setEndVelocity(configA.getMaxVelocity()/3);
-                if (i != 0) {
-                        configA.setStartVelocity(configA.getMaxVelocity()/3);
-                }
-
-//                if (i == 0) {
-//                    configA.setEndVelocity(Units.feetToMeters(4.5));
-//                }
-//
-//                if (i == 1) {
-//                    configA.setStartVelocity(Units.feetToMeters(4.5));
-//                }
-
-                if (i == waypoints.length - 2) {
-                        configA.setEndVelocity(0);
-                }
+                configA.setStartVelocity(startVelocities[i]);
+                configA.setEndVelocity(endVelocities[i]);
+                
                 Trajectory trajectory = TrajectoryGenerator.generateTrajectory(waypoints[i],
                 List.of(),
                 waypoints[i + 1],
