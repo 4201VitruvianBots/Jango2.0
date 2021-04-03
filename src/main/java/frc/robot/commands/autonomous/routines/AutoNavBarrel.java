@@ -46,13 +46,14 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 {176,45,-120},
                 {135,45,120},
                 {150,90,0},
-                {250,90,30},
-                {270,135,135},
-                {210,120,-90},
+                {250,96,30},
+                {270,141,135},
+                {210,120,-80},
                 {290,45,-45},
                 {330,45,45},
                 {300,90,180},
-                {0,90,180}
+                {180, 100, 180},
+                {30,100,180}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
         for (int j = 0; j < waypointsRaw.length; j++) {
@@ -72,10 +73,32 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 new SetOdometry(driveTrain, fieldSim, startPosition),
                 new SetDriveNeutralMode(driveTrain, 0));
 
-        double[] startVelocities = {0, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3,
-                        configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0};
-        double[] endVelocities = {configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3,
-                        configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, configA.getMaxVelocity()/3, 0};
+        double[] startVelocities = {
+                0,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                configA.getMaxVelocity()};
+        double[] endVelocities = {
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                2 * configA.getMaxVelocity()/3,
+                configA.getMaxVelocity(),
+                2 * configA.getMaxVelocity()/3};
 
         for(int i = 0; i < waypoints.length - 1; i++) {
                 configA.setStartVelocity(startVelocities[i]);

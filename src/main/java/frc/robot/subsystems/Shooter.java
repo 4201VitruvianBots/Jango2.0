@@ -31,11 +31,11 @@ public class Shooter extends SubsystemBase {
      *
      * @return
      */
-    // PID loop contants
+    // PID loop constants
     private final double kF = 0.0523;  // 0.054      //  Gree: 0.0475;
-    private final double kP = 0.6;      //  0.4       //  0.00047
+    private final double kP = 0.35;      //  0.4       //  0.00047
     private final double kI = 0.0;                    //  0.0000287
-    private final double kD = 0.0;
+    private final double kD = 3.5;
 
 //    private double kF = 0.0523;  // 0.054      //  Gree: 0.0475;
 //    private double kP = 0.6;      //  0.4       //  0.00047
