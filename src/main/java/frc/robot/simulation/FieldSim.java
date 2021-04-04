@@ -80,7 +80,8 @@ public class FieldSim {
         m_powercells[15].setBallPose(SimConstants.redCenterBalls[3]);
         m_powercells[16].setBallPose(SimConstants.redCenterBalls[4]);*/
 
-        Pose2d startPosition = new Pose2d(12.557047,7.275692, new Rotation2d(Units.degreesToRadians(0)));
+
+        Pose2d startPosition = new Pose2d(Units.inchesToMeters(40), Units.inchesToMeters(90), new Rotation2d(Units.degreesToRadians(0)));
         m_field2d.setRobotPose(startPosition);
         m_driveTrain.resetOdometry(startPosition, startPosition.getRotation());
         m_autoStartTime = Timer.getFPGATimestamp();
