@@ -8,36 +8,23 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.LED.GetSubsystemStates;
 import frc.robot.commands.autonomous.routines.*;
-import frc.robot.commands.autonomous.routines.simulation.OpRoutineRed;
 import frc.robot.commands.climber.EnableClimbMode;
 import frc.robot.commands.climber.SetClimberOutput;
 import frc.robot.commands.drivetrain.BrakeWhileHeld;
-import frc.robot.commands.drivetrain.DriveBackwardDistance;
-import frc.robot.commands.drivetrain.DriveForwardDistance;
 import frc.robot.commands.drivetrain.SetArcadeDrive;
-import frc.robot.commands.drivetrain.SetDriveNeutralMode;
 import frc.robot.commands.drivetrain.SetDriveShifters;
-import frc.robot.commands.drivetrain.SetOdometry;
 import frc.robot.commands.indexer.EjectAll;
 import frc.robot.commands.indexer.FeedAll;
-import frc.robot.commands.intake.AutoControlledIntake;
 import frc.robot.commands.intake.ControlledIntake;
-import frc.robot.commands.intake.SetIntakePiston;
 import frc.robot.commands.intake.ToggleIntakePistons;
 import frc.robot.commands.shooter.RapidFireSetpoint;
 import frc.robot.commands.shooter.SetRpmSetpoint;
@@ -292,30 +279,30 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        switch (selectedSkillsChallenge) {
-            case AUTO_NAV_BARREL:
-                return new AutoNavBarrel(m_driveTrain, m_FieldSim);
-            case AUTO_NAV_BOUNCE:
-                return new AutoNavBounce(m_driveTrain, m_FieldSim);
-            case AUTO_NAV_SLALOM:
-                return new AutoNavSlalom(m_driveTrain, m_FieldSim);
-            case LIGHSTPEED_CIRCUIT:
-                return new LightspeedCircuit(m_driveTrain, m_FieldSim);
-            case GALACTIC_SEARCH_A:
-                return new SequentialCommandGroup(
-                    new SetIntakePiston(m_intake, true), 
-                    (new ConditionalCommand(new GalacticSearchARed(m_driveTrain, m_FieldSim), new GalacticSearchABlue(m_driveTrain, m_FieldSim), () -> true)).deadlineWith(new AutoControlledIntake(m_intake, m_indexer)),
-                    new SetIntakePiston(m_intake, false));
-            case GALACTIC_SEARCH_B:
-                return new SequentialCommandGroup(
-                    new SetIntakePiston(m_intake, true), 
-                    new GalacticSearchB(m_driveTrain, m_FieldSim).deadlineWith(new AutoControlledIntake(m_intake, m_indexer)),
-                    new SetIntakePiston(m_intake, false));
-            case None:
-            default:
-                System.out.println("Not a recognized skills command");
-                return null;
-        }
+//        switch (selectedSkillsChallenge) {
+//            case AUTO_NAV_BARREL:
+//                return new AutoNavBarrel(m_driveTrain, m_FieldSim);
+//            case AUTO_NAV_BOUNCE:
+//                return new AutoNavBounce(m_driveTrain, m_FieldSim);
+//            case AUTO_NAV_SLALOM:
+//                return new AutoNavSlalom(m_driveTrain, m_FieldSim);
+//            case LIGHSTPEED_CIRCUIT:
+//                return new LightspeedCircuit(m_driveTrain, m_FieldSim);
+//            case GALACTIC_SEARCH_A:
+//                return new SequentialCommandGroup(
+//                    new SetIntakePiston(m_intake, true),
+//                    (new ConditionalCommand(new GalacticSearchARed(m_driveTrain, m_FieldSim), new GalacticSearchABlue(m_driveTrain, m_FieldSim), () -> true)).deadlineWith(new AutoControlledIntake(m_intake, m_indexer)),
+//                    new SetIntakePiston(m_intake, false));
+//            case GALACTIC_SEARCH_B:
+//                return new SequentialCommandGroup(
+//                    new SetIntakePiston(m_intake, true),
+//                    new GalacticSearchB(m_driveTrain, m_FieldSim).deadlineWith(new AutoControlledIntake(m_intake, m_indexer)),
+//                    new SetIntakePiston(m_intake, false));
+//            case None:
+//            default:
+//                System.out.println("Not a recognized skills command");
+//                return null;
+//        }
         
 //            return new SOTMSimulationAuto(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision, m_FieldSim, m_ShootOnTheMove);
             //return m_ShootOnTheMove;
@@ -323,6 +310,7 @@ public class RobotContainer {
 //            return new AllyTrenchPathSplineSim(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision, m_FieldSim);
             //return new OpRoutineRed(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision, m_FieldSim);
 //            return new DriveStraight(m_driveTrain, m_turret, m_FieldSim);
+        return new AutoNavBounce(m_driveTrain, m_FieldSim);
 //        return new WaitCommand(0);
     }
 

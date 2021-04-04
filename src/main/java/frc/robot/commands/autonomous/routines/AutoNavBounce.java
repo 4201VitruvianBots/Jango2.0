@@ -1,14 +1,7 @@
 package frc.robot.commands.autonomous.routines;
 
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -16,26 +9,18 @@ import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstr
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotContainer;
-import frc.robot.commands.autonomous.SmartdashboardCommand;
-import frc.robot.commands.autonomous.TurnInPlace;
 import frc.robot.commands.drivetrain.SetDriveNeutralMode;
 import frc.robot.commands.drivetrain.SetDriveShifters;
 import frc.robot.commands.drivetrain.SetOdometry;
-import frc.robot.commands.intake.SetIntakeSpeed;
-import frc.robot.commands.intake.SetIntakePiston;
-import frc.robot.commands.intake.SetIntakeStates;
 import frc.robot.constants.Constants;
 import frc.robot.simulation.FieldSim;
-import frc.robot.simulation.SimulationShoot;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.DriveTrain;
 import frc.vitruvianlib.utils.TrajectoryUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AutoNavBounce extends SequentialCommandGroup {
     public AutoNavBounce(DriveTrain driveTrain, FieldSim fieldSim) {
@@ -71,17 +56,24 @@ public class AutoNavBounce extends SequentialCommandGroup {
         double[] endVelocities = {0, configA.getMaxVelocity(), configA.getMaxVelocity(), 0, configA.getMaxVelocity(), 
                 configA.getMaxVelocity(), 0, 0};
 
+        var trajectoryStates = new ArrayList<Pose2d>();
         for(int i = 0; i < waypoints.length - 1; i++) {
-                configA.setStartVelocity(startVelocities[i]);
-                configA.setEndVelocity(endVelocities[i]);
-                configA.setReversed(pathIsReversed[i]);
-                Trajectory trajectory = TrajectoryGenerator.generateTrajectory(waypoints[i],
-                List.of(),
-                waypoints[i + 1],
-                configA);
+            configA.setStartVelocity(startVelocities[i]);
+            configA.setEndVelocity(endVelocities[i]);
+            configA.setReversed(pathIsReversed[i]);
+            Trajectory trajectory = TrajectoryGenerator.generateTrajectory(waypoints[i],
+            List.of(),
+            waypoints[i + 1],
+            configA);
+
+            trajectoryStates.addAll(trajectory.getStates().stream()
+                    .map(state -> state.poseMeters)
+                    .collect(Collectors.toList()));
+
             var command = TrajectoryUtils.generateRamseteCommand(driveTrain, trajectory);
             addCommands(command);
         }
+        fieldSim.getField2d().getObject("trajectory").setPoses(trajectoryStates);
     }
 }
 

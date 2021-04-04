@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
@@ -15,10 +16,8 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class FieldSim {
     private Field2d m_field2d;
@@ -46,6 +45,10 @@ public class FieldSim {
             m_powercells[i] = new Powercell(String.format("PowerCell_" + String.format("%02d", i) ));
 
         m_field2d = new Field2d();
+    }
+
+    public Field2d getField2d(){
+        return m_field2d;
     }
 
     public void initSim() {
@@ -104,33 +107,22 @@ public class FieldSim {
              |       |
              0-------1
              |       |
-             3-------2
+             2-------3
          */
 
         // Look up rotating a point about another point in 2D space for the math explanation
+        Translation2d[] intakePositions = {
+                new Translation2d( -SimConstants.robotLength / 2.0, SimConstants.robotWidth / 2.0),
+                new Translation2d(-SimConstants.robotLength / 2.0, -SimConstants.robotWidth / 2.0),
+                new Translation2d(-(SimConstants.robotLength / 2.0) - SimConstants.intakeLength, SimConstants.robotWidth / 2.0),
+                new Translation2d(-(SimConstants.robotLength / 2.0) - SimConstants.intakeLength, -SimConstants.robotWidth / 2.0),
+        };
+
         Pose2d robotPose = m_driveTrain.getRobotPose();
-        double robotX = robotPose.getX();
-        double robotY = robotPose.getY();
-        double cos = robotPose.getRotation().getCos();
-        double sin = robotPose.getRotation().getSin();
-
-        double deltaXa = (robotX - SimConstants.robotLength / 2.0 - SimConstants.intakeLength) - robotX;
-        double deltaXb = (robotX - SimConstants.robotLength / 2.0) - robotX;
-        double deltaYa = (robotY + SimConstants.robotWidth / 2.0 ) - robotY;
-        double deltaYb = (robotY - SimConstants.robotWidth / 2.0 ) - robotY;
-
-        intakePose[0] = new Pose2d(cos * deltaXa - sin * deltaYa + robotX,
-                sin * deltaXa + cos * deltaYa + robotY,
-                new Rotation2d());
-        intakePose[1] = new Pose2d(cos * deltaXa - sin * deltaYb + robotX,
-                sin * deltaXa + cos * deltaYb + robotY,
-                new Rotation2d());
-        intakePose[2] = new Pose2d(cos * deltaXb - sin * deltaYb + robotX,
-                sin * deltaXb + cos * deltaYb + robotY,
-                new Rotation2d());
-        intakePose[3] = new Pose2d(cos * deltaXb - sin * deltaYa + robotX,
-                sin * deltaXb + cos * deltaYa + robotY,
-                new Rotation2d());
+        for (int i = 0; i < intakePose.length; i++) {
+            var intakePoseFromChassis = intakePositions[i].rotateBy(robotPose.getRotation()).plus(robotPose.getTranslation());
+            intakePose[i] = new Pose2d(intakePoseFromChassis, robotPose.getRotation());
+        }
     }
 
     private boolean isBallInIntakeZone(Pose2d ballPose){
@@ -192,15 +184,10 @@ public class FieldSim {
 
         updateIntakePoses();
 
-        m_field2d.getObject("Intake A").setPose(intakePose[0]);
-        m_field2d.getObject("Intake B").setPose(intakePose[1]);
-        m_field2d.getObject("Intake C").setPose(intakePose[2]);
-        m_field2d.getObject("Intake D").setPose(intakePose[3]);
+        m_field2d.getObject("Intake").setPoses(intakePose);
 
-        for(Powercell p:m_powercells) {
-            updateBallState(p);
-            m_field2d.getObject(p.getName()).setPose(p.getBallPose());
-        }
+        m_field2d.getObject("PowerCells").setPoses(Arrays.stream(m_powercells).map(Powercell::getBallPose)
+                .collect(Collectors.toList()));
 
         SmartDashboard.putData("Field2d", m_field2d);
     }
