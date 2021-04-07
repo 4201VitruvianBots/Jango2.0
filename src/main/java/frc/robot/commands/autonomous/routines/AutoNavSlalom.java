@@ -29,18 +29,18 @@ public class AutoNavSlalom extends SequentialCommandGroup {
                 {40,30,0},
                 // {90,60,60},
                 {120,90,0},
-                {242,96,0},
-                {273,60,-60},
+                {239,96,0},
+                {266,60,-70},
 //                {286,50,-45},
-                {300,30,0},
+                {296,30,0},
                 {350,60,90},
                 {320,80,180},
-                {285,60,270},
-                {245,15,180},
+                {285,60,-105},
+                {245,16,180},
 //                {200,15,180},
-                {135,15,180},
-                {100,60,90},
-                {30,90,180}
+                {140,16,180},
+                {105,60,105},
+                {30,80,168}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
         for (int j = 0; j < waypointsRaw.length; j++) {
@@ -49,12 +49,12 @@ public class AutoNavSlalom extends SequentialCommandGroup {
         
         Pose2d startPosition = waypoints[0];
 
-        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(2));
+        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(2.35));
         configA.setReversed(false);
         //configA.setEndVelocity(configA.getMaxVelocity());
         configA.addConstraint(new DifferentialDriveKinematicsConstraint(driveTrain.getDriveTrainKinematics(), configA.getMaxVelocity()));
         configA.addConstraint(new DifferentialDriveVoltageConstraint(driveTrain.getFeedforward(), driveTrain.getDriveTrainKinematics(),10));
-        configA.addConstraint(new CentripetalAccelerationConstraint(1.5));
+        configA.addConstraint(new CentripetalAccelerationConstraint(1.85));
 
         int numberOfCones = SimConstants.autoNavSlalomCones.length;
             for(int i = 0; i < numberOfCones; i++) {
@@ -75,27 +75,27 @@ public class AutoNavSlalom extends SequentialCommandGroup {
         double[] startVelocities = {
                 0,
                 configA.getMaxVelocity(),
+                3*configA.getMaxVelocity()/4,
                 2*configA.getMaxVelocity()/3,
                 2*configA.getMaxVelocity()/3,
                 2*configA.getMaxVelocity()/3,
                 2*configA.getMaxVelocity()/3,
+                3*configA.getMaxVelocity()/4,
+                configA.getMaxVelocity()/2,
                 2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3};
+                0.55*configA.getMaxVelocity()};
         double[] endVelocities = {
                 configA.getMaxVelocity(),
+                3*configA.getMaxVelocity()/4,
                 2*configA.getMaxVelocity()/3,
                 2*configA.getMaxVelocity()/3,
                 2*configA.getMaxVelocity()/3,
                 2*configA.getMaxVelocity()/3,
+                3*configA.getMaxVelocity()/4,
+                configA.getMaxVelocity()/2,
                 2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3,
-                2*configA.getMaxVelocity()/3,
-                0};
+                0.55*configA.getMaxVelocity(),
+                2*configA.getMaxVelocity()/3};
 
         for(int i = 0; i < waypoints.length - 1; i++) {
             configA.setStartVelocity(startVelocities[i]);

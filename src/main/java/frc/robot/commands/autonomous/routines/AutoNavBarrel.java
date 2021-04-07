@@ -51,9 +51,9 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 {210,120,-80},
                 {290,45,-45},
                 {330,45,45},
-                {300,90,180},
-                {180, 100, 180},
-                {30,100,180}
+                {300,92,175},
+                {180, 102, 180},
+                {30,102,180}
         };
         Pose2d[] waypoints = new Pose2d[waypointsRaw.length];
         for (int j = 0; j < waypointsRaw.length; j++) {
@@ -67,7 +67,7 @@ public class AutoNavBarrel extends SequentialCommandGroup {
         //configA.setEndVelocity(configA.getMaxVelocity());
         configA.addConstraint(new DifferentialDriveKinematicsConstraint(driveTrain.getDriveTrainKinematics(), configA.getMaxVelocity()));
         configA.addConstraint(new DifferentialDriveVoltageConstraint(driveTrain.getFeedforward(), driveTrain.getDriveTrainKinematics(),10));
-        configA.addConstraint(new CentripetalAccelerationConstraint(1.2)); // This is what we can change when we're actually testing
+        configA.addConstraint(new CentripetalAccelerationConstraint(1.7)); // This is what we can change when we're actually testing
 
         addCommands(new SetDriveShifters(driveTrain, Constants.DriveConstants.inSlowGear),
                 new SetOdometry(driveTrain, fieldSim, startPosition),
@@ -81,11 +81,11 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 2 * configA.getMaxVelocity()/3,
                 2 * configA.getMaxVelocity()/3,
                 2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                configA.getMaxVelocity()};
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4};
         double[] endVelocities = {
                 2 * configA.getMaxVelocity()/3,
                 2 * configA.getMaxVelocity()/3,
@@ -93,11 +93,11 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 2 * configA.getMaxVelocity()/3,
                 2 * configA.getMaxVelocity()/3,
                 2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                2 * configA.getMaxVelocity()/3,
-                configA.getMaxVelocity(),
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4,
+                3 * configA.getMaxVelocity()/4,
                 2 * configA.getMaxVelocity()/3};
 
         for(int i = 0; i < waypoints.length - 1; i++) {
