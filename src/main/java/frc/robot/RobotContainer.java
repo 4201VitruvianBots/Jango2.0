@@ -41,7 +41,9 @@ import frc.robot.commands.intake.SetIntakePiston;
 import frc.robot.commands.intake.ToggleIntakePistons;
 import frc.robot.commands.shooter.RapidFireSetpoint;
 import frc.robot.commands.shooter.SetRpmSetpoint;
+import frc.robot.commands.shooter.TestAutomatedShooting;
 import frc.robot.commands.skyhook.SetSkyhookOutput;
+import frc.robot.commands.turret.AutoUseVisionCorrection;
 import frc.robot.commands.turret.SetTurretSetpointFieldAbsolute;
 import frc.robot.commands.turret.ShootOnTheMove;
 import frc.robot.commands.turret.ToggleTurretControlMode;
@@ -183,9 +185,10 @@ public class RobotContainer {
         m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
 
         if(RobotBase.isReal()) {
-            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain, m_intake,
+            m_driveTrain.setDefaultCommand(new SequentialCommandGroup(new SetDriveShifters(m_driveTrain, Constants.DriveConstants.inSlowGear), 
+            new SetArcadeDrive(m_driveTrain, m_intake,
                     () -> leftJoystick.getRawAxis(1),
-                    () -> rightJoystick.getRawAxis(0)));
+                    () -> rightJoystick.getRawAxis(0))));
 
             m_led.setDefaultCommand(new GetSubsystemStates(this, m_led, m_indexer, m_intake, m_vision, m_turret, m_climber, m_colorSensor, m_controls));
         }
@@ -258,7 +261,8 @@ public class RobotContainer {
         xBoxButtons[1].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3410));//blue                  // B - Set RPM Medium
         xBoxPOVButtons[0].whileHeld(new EjectAll(m_indexer, m_intake));                                  //Top POV - Eject All
         xBoxButtons[3].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3900));//yellow                     // Y - Set RPM Far
-        xBoxButtons[0].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3500));//red                 // A - Set RPM Close
+        //xBoxButtons[0].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3500));//red                 // A - Set RPM Close
+        xBoxButtons[0].whileHeld(new TestAutomatedShooting(m_driveTrain, m_shooter, m_turret, m_vision));
 
         //xBoxButtons[5].whileHeld(new RapidFire(m_shooter, m_indexer, m_intake, 3700));              // Set Distance RPM
         xBoxRightTrigger.whileHeld(new RapidFireSetpoint(m_shooter, m_indexer, m_intake));            // flywheel on toggle
