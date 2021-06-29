@@ -7,6 +7,7 @@
 
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -21,13 +22,14 @@ public class SetArcadeDrive extends CommandBase {
     private final DriveTrain m_driveTrain;
     private final Intake m_intake;
     private final DoubleSupplier m_throttle, m_turn;
-
+    XboxController tes = new XboxController(1);
     /**
      * Creates a new ExampleCommand.
      *
      * @param subsystem The subsystem used by this command.
      */
     public SetArcadeDrive(DriveTrain driveTrain, Intake intake, DoubleSupplier throttle, DoubleSupplier turn) {
+
         m_driveTrain = driveTrain;
         m_intake = intake;
         m_throttle = throttle;

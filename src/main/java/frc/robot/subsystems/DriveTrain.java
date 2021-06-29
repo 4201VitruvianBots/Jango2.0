@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -32,11 +30,13 @@ import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpiutil.math.VecBuilder;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.DriveConstants;
+
+import java.util.function.DoubleSupplier;
 
 
 public class DriveTrain extends SubsystemBase {
@@ -378,8 +378,8 @@ public class DriveTrain extends SubsystemBase {
             // issue on the actual robot when he had it. By removing this, the robot sim will follow the trajectory perfectly.
 //            leftMetersPerSecond = m_leftEncoderSim.getRate();
 //            rightMetersPerSecond = m_rightEncoderSim.getRate();
-//            leftMetersPerSecond = (simMotors[0].getSelectedSensorVelocity() * 10.0 / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
-//            rightMetersPerSecond = (simMotors[2].getSelectedSensorVelocity() * 10.0 / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
+            leftMetersPerSecond = (simMotors[0].getSelectedSensorVelocity() * 10.0 / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
+            rightMetersPerSecond = (simMotors[2].getSelectedSensorVelocity() * 10.0 / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
         }
 
         return new DifferentialDriveWheelSpeeds(leftMetersPerSecond, rightMetersPerSecond);
@@ -518,9 +518,11 @@ public class DriveTrain extends SubsystemBase {
         // We negate the right side so that positive voltages make the right side
         // move forward.
 
-        m_drivetrainSimulator.setInputs(m_leftOutput * RobotController.getBatteryVoltage(),
-                m_rightOutput * RobotController.getBatteryVoltage());
-        m_drivetrainSimulator.update(0.040);
+        double leftInput = Math.abs(m_leftOutput) > 12 ? 12 * Math.signum(m_leftOutput) : m_leftOutput;
+        double rightInput = Math.abs(m_rightOutput) > 12 ? 12 * Math.signum(m_rightOutput) : m_rightOutput;
+        m_drivetrainSimulator.setInputs(leftInput * RobotController.getBatteryVoltage(),
+                rightInput * RobotController.getBatteryVoltage());
+        m_drivetrainSimulator.update(0.020);
 
 //        m_leftEncoderSim.setDistance(m_drivetrainSimulator.getLeftPositionMeters());
 //        m_leftEncoderSim.setRate(m_drivetrainSimulator.getLeftVelocityMetersPerSecond());
@@ -529,7 +531,7 @@ public class DriveTrain extends SubsystemBase {
 //        m_gyroAngleSim.set(-m_drivetrainSimulator.getHeading().getDegrees());
 
         // For CTRE devices, you must call this function periodically for simulation
-        Unmanaged.feedEnable(40);
+        Unmanaged.feedEnable(20);
         simMotors[0].getSimCollection().setQuadraturePosition(distanceMetersToTalonSrxUnits(m_drivetrainSimulator.getLeftPositionMeters()));
         simMotors[0].getSimCollection().setQuadratureVelocity(velocityMetersToTalonSrxUnits(m_drivetrainSimulator.getLeftVelocityMetersPerSecond()));
         simMotors[2].getSimCollection().setQuadraturePosition(distanceMetersToTalonSrxUnits(m_drivetrainSimulator.getRightPositionMeters()));
@@ -559,6 +561,10 @@ public class DriveTrain extends SubsystemBase {
 //            SmartDashboard.putNumber("Max Vel", m_leftEncoder.get());
 //            maxVel = m_leftEncoder.getRate();
 //        }
+
+        sampleTrajectory();
+        System.out.println("ChassisSpeed: " + kinematics.toChassisSpeeds(getSpeeds()));
+
     }
 
     int distanceMetersToTalonSrxUnits(double meters) {
@@ -575,5 +581,34 @@ public class DriveTrain extends SubsystemBase {
         double gearRatio = getDriveShifterStatus() ? gearRatioHigh : gearRatioLow;
 
         return (int) (meters * 2048.0 / (10 * gearRatio * Math.PI));
+    }
+
+    Trajectory currentTrajectory;
+    double m_trajectoryTime;
+
+    private void sampleTrajectory() {
+        if(DriverStation.getInstance().isAutonomous()) {
+            try {
+                var currentTrajectoryState = currentTrajectory.sample(Timer.getFPGATimestamp() - startTime);
+
+                System.out.println("Trajectory Time: " + (Timer.getFPGATimestamp() - startTime));
+                System.out.println("Trajectory Pose: " + currentTrajectoryState.poseMeters);
+                System.out.println("Trajectory Speed: " + currentTrajectoryState.velocityMetersPerSecond);
+                System.out.println("Trajectory angular speed: " + currentTrajectoryState.curvatureRadPerMeter);
+            } catch (Exception e) {
+
+            }
+        }
+
+    }
+
+    public void setTrajectoryTime(double trajectoryTime) {
+        m_trajectoryTime = trajectoryTime;
+    }
+
+    double startTime;
+    public void setCurrentTrajectory(Trajectory trajectory) {
+        currentTrajectory = trajectory;
+        startTime = Timer.getFPGATimestamp();
     }
 }

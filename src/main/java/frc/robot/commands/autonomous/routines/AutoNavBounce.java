@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstr
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drivetrain.SetDriveNeutralMode;
 import frc.robot.commands.drivetrain.SetDriveShifters;
@@ -40,7 +41,7 @@ public class AutoNavBounce extends SequentialCommandGroup {
         Pose2d startPosition = waypoints[0];
 
 
-        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(10));
+        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(10), Units.feetToMeters(5));
         configA.setReversed(false);
         //configA.setEndVelocity(configA.getMaxVelocity());
         configA.addConstraint(new DifferentialDriveKinematicsConstraint(driveTrain.getDriveTrainKinematics(), configA.getMaxVelocity()));
@@ -71,7 +72,7 @@ public class AutoNavBounce extends SequentialCommandGroup {
                     .collect(Collectors.toList()));
 
             var command = TrajectoryUtils.generateRamseteCommand(driveTrain, trajectory);
-            addCommands(command);
+            addCommands(command.alongWith(new InstantCommand(() -> driveTrain.setCurrentTrajectory(trajectory))));
         }
         fieldSim.getField2d().getObject("trajectory").setPoses(trajectoryStates);
     }
