@@ -89,24 +89,28 @@ public class DriveToTargetTrajectory extends CommandBase {
         m_prevTime = currentTime;
 
         if(dt > 0) {
-            var currentReference = m_path.sample(currentTime);
+            try {
+                var currentReference = m_path.sample(currentTime);
 
-            var m_chassisSpeeds = m_pathFollower.calculate(m_tempOdometry.getPoseMeters(), currentReference);
+                var m_chassisSpeeds = m_pathFollower.calculate(m_tempOdometry.getPoseMeters(), currentReference);
 
-            var targetSpeeds = m_driveTrain.getDriveTrainKinematics().toWheelSpeeds(m_chassisSpeeds);
+                var targetSpeeds = m_driveTrain.getDriveTrainKinematics().toWheelSpeeds(m_chassisSpeeds);
 
-            double leftTargetSpeed = targetSpeeds.leftMetersPerSecond;
-            double rightTargetSpeed = targetSpeeds.rightMetersPerSecond;
+                double leftTargetSpeed = targetSpeeds.leftMetersPerSecond;
+                double rightTargetSpeed = targetSpeeds.rightMetersPerSecond;
 
-            double leftOutput = m_driveTrain.getLeftPIDController().calculate(m_driveTrain.getSpeeds().leftMetersPerSecond, leftTargetSpeed);
-            leftOutput += m_driveTrain.getFeedforward().calculate(
-                    leftTargetSpeed, (leftTargetSpeed - m_prevSpeed.leftMetersPerSecond) / dt);
+                double leftOutput = m_driveTrain.getLeftPIDController().calculate(m_driveTrain.getSpeeds().leftMetersPerSecond, leftTargetSpeed);
+                leftOutput += m_driveTrain.getFeedforward().calculate(
+                        leftTargetSpeed, (leftTargetSpeed - m_prevSpeed.leftMetersPerSecond) / dt);
 
-            double rightOutput = m_driveTrain.getLeftPIDController().calculate(m_driveTrain.getSpeeds().rightMetersPerSecond, rightTargetSpeed);
-            rightOutput += m_driveTrain.getFeedforward().calculate(
-                    rightTargetSpeed, (rightTargetSpeed - m_prevSpeed.rightMetersPerSecond) / dt);
+                double rightOutput = m_driveTrain.getLeftPIDController().calculate(m_driveTrain.getSpeeds().rightMetersPerSecond, rightTargetSpeed);
+                rightOutput += m_driveTrain.getFeedforward().calculate(
+                        rightTargetSpeed, (rightTargetSpeed - m_prevSpeed.rightMetersPerSecond) / dt);
 
-            m_driveTrain.setVoltageOutput(leftOutput, rightOutput);
+                m_driveTrain.setVoltageOutput(leftOutput, rightOutput);
+            } catch (Exception e) {
+                
+            }
         }
     }
 
