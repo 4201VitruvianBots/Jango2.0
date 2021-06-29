@@ -15,6 +15,7 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Vision;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class FieldSim {
 
     private double m_autoStartTime;
 
-    public FieldSim(DriveTrain driveTrain, Turret turret, Shooter shooter) {
+    public FieldSim(DriveTrain driveTrain, Turret turret, Shooter shooter, Vision vision) {
         m_driveTrain = driveTrain;
         m_turret = turret;
         m_shooter = shooter;

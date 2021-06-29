@@ -518,8 +518,11 @@ public class DriveTrain extends SubsystemBase {
         // We negate the right side so that positive voltages make the right side
         // move forward.
 
-        double leftInput = Math.abs(m_leftOutput) > 12 ? 12 * Math.signum(m_leftOutput) : m_leftOutput;
-        double rightInput = Math.abs(m_rightOutput) > 12 ? 12 * Math.signum(m_rightOutput) : m_rightOutput;
+//        double leftInput = Math.abs(m_leftOutput) > 12 ? 12 * Math.signum(m_leftOutput) : m_leftOutput;
+//        double rightInput = Math.abs(m_rightOutput) > 12 ? 12 * Math.signum(m_rightOutput) : m_rightOutput;
+        double leftInput = m_leftOutput;
+        double rightInput = m_rightOutput;
+
         m_drivetrainSimulator.setInputs(leftInput * RobotController.getBatteryVoltage(),
                 rightInput * RobotController.getBatteryVoltage());
         m_drivetrainSimulator.update(0.020);

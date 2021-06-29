@@ -20,6 +20,7 @@ import frc.robot.commands.autonomous.routines.*;
 import frc.robot.commands.climber.EnableClimbMode;
 import frc.robot.commands.climber.SetClimberOutput;
 import frc.robot.commands.drivetrain.BrakeWhileHeld;
+import frc.robot.commands.drivetrain.DriveToTargetTrajectory;
 import frc.robot.commands.drivetrain.SetArcadeDrive;
 import frc.robot.commands.drivetrain.SetDriveShifters;
 import frc.robot.commands.indexer.EjectAll;
@@ -166,7 +167,7 @@ public class RobotContainer {
 //        for(int i = 0; i < 6; i++)
 //            m_powercells[i] = new Powercell("PowerCell_" + i);
 
-        m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
+        m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter, m_vision);
 
         if(RobotBase.isReal()) {
             m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain, m_intake,
@@ -226,6 +227,7 @@ public class RobotContainer {
             //testButtons[0].whenPressed(new SimulationShoot(m_FieldSim, false));
 //            testButtons[3].toggleWhenPressed(m_ShootOnTheMove); // Y - Shoot on the Move
             testButtons[0].whileHeld(new FeedAll(m_indexer));
+            testButtons[1].whenPressed(new DriveToTargetTrajectory(m_driveTrain, m_vision, m_FieldSim));
         }
     }
 

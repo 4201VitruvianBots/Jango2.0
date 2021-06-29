@@ -11,19 +11,22 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpiutil.net.PortForwarder;
+import org.photonvision.LEDMode;
+import org.photonvision.PhotonCamera;
+import org.photonvision.SimVisionSystem;
+import org.photonvision.SimVisionTarget;
+
+import static frc.robot.simulation.SimConstants.blueGoalPose;
+import static frc.robot.simulation.SimConstants.redGoalPose;
 
 /*
 Subsystem for interacting with the Limelight and OpenSight vision systems
@@ -45,8 +48,8 @@ public class Vision extends SubsystemBase {
     private final double VERTICAL_TARGET_PIXEL_THRESHOLD = 1;
 
     // NetworkTables for reading vision data
-    private final NetworkTable limelight;
-    private final NetworkTable openSight;
+    PhotonCamera photonCamera;
+    SimVisionSystem simPhotonCamera;
 
     // Subsystems that will be controlled based on vision data
     private final DriveTrain m_driveTrain;
@@ -74,17 +77,41 @@ public class Vision extends SubsystemBase {
 			camera.setResolution(320, 240);
 			camera.setPixelFormat(VideoMode.PixelFormat.kMJPEG);
 		}
-		//CameraServer.getInstance().addAxisCamera("opensight", "opensight.local");
 
-        // TODO: What port does opensight use?
-        PortForwarder.add(6000, "opensight.local", 22);
-        PortForwarder.add(5800, "10.42.1.11", 5800);
-        PortForwarder.add(5801, "10.42.1.11", 5801);
-        PortForwarder.add(5805, "10.42.1.11", 5805);
+//        PortForwarder.add(5800, "10.42.1.11", 5800);
+//        PortForwarder.add(5801, "10.42.1.11", 5801);
+//        PortForwarder.add(5805, "10.42.1.11", 5805);
 
         // Init vision NetworkTables
-        limelight = NetworkTableInstance.getDefault().getTable("limelight");
-        openSight = NetworkTableInstance.getDefault().getTable("OpenSight");
+        photonCamera = new PhotonCamera("photonvision");
+
+
+        double TARGET_HEIGHT_METERS = Units.inchesToMeters(81.19);
+        double TARGET_WIDTH = Units.inchesToMeters(41.30) - Units.inchesToMeters(6.70); // meters
+        double TARGET_HEIGHT = Units.inchesToMeters(98.19) - Units.inchesToMeters(81.19); // meters
+
+        simPhotonCamera = new SimVisionSystem(
+                "photonvision",
+                75.76079874010732,
+                30,
+                new Transform2d(),
+                Units.feetToMeters(2),
+                Units.feetToMeters(25),
+                320,
+                240,
+                10);
+        simPhotonCamera.addSimVisionTarget(
+                new SimVisionTarget(redGoalPose,
+                        TARGET_HEIGHT_METERS,
+                        TARGET_WIDTH,
+                        TARGET_HEIGHT)
+        );
+        simPhotonCamera.addSimVisionTarget(
+                new SimVisionTarget(blueGoalPose,
+                        TARGET_HEIGHT_METERS,
+                        TARGET_WIDTH,
+                        TARGET_HEIGHT)
+        );
         setPipeline(0);
 
         //initShuffleboard();
@@ -115,11 +142,17 @@ public class Vision extends SubsystemBase {
 
     // Limelight interaction functions
     public double getTargetY() {
-        return limelight.getEntry("ty").getDouble(0);
+        if(hasTarget())
+            return photonCamera.getLatestResult().getBestTarget().getYaw();
+        else
+            return 0;
     }
 
     public double getTargetX() {
-        return limelight.getEntry("tx").getDouble(0);
+        if(hasTarget())
+            return photonCamera.getLatestResult().getBestTarget().getPitch();
+        else
+            return 0;
     }
 
     public double getFilteredTargetX() {
@@ -143,71 +176,47 @@ public class Vision extends SubsystemBase {
     }
 
     private void resetPoseByVision() {
-        if(! resetPose) {
-            if((Math.abs(getHorizontalSidelength() - HORIZONTAL_TARGET_PIXEL_WIDTH) < HORIZONTAL_TARGET_PIXEL_THRESHOLD) &&
-                    (Math.abs(getVerticalSidelength() - VERTICAL_TARGET_PIXEL_WIDTH) < VERTICAL_TARGET_PIXEL_THRESHOLD)) {
-                double targetRadians = Units.degreesToRadians(m_turret.getFieldRelativeAngle());
-                double xDistance = Math.abs(Math.cos(targetRadians)) * getTargetDistance();
-                double yDistance = - Math.signum(getFilteredTargetX()) * Math.abs(Math.sin(targetRadians)) * getTargetDistance();
 
-                m_driveTrain.resetOdometry(new Pose2d(xDistance, yDistance, new Rotation2d()),
-                        Rotation2d.fromDegrees(m_driveTrain.getHeading()));
-
-                resetPose = true;
-            }
-        } else if(resetPose && ! hasTarget()) {
-            resetPose = false;
-        }
     }
 
     // More Limelight interaction functions
 
     public boolean hasTarget() {
-        return limelight.getEntry("tv").getDouble(0) == 1;
+        return photonCamera.hasTargets();
+    }
+
+    public Transform2d getCameraToTarget() {
+        if(photonCamera.hasTargets())
+            return photonCamera.getLatestResult().getBestTarget().getCameraToTarget();
+        else
+            return new Transform2d();
     }
 
     public double getTargetArea() {
-        return limelight.getEntry("ta").getDouble(0);
+        return photonCamera.getLatestResult().getBestTarget().getArea();
     }
 
     public double getTargetSkew() {
-        return limelight.getEntry("ts").getDouble(0);
+        return photonCamera.getLatestResult().getBestTarget().getSkew();
     }
 
     public double getPipelineLatency() {
-        return limelight.getEntry("tl").getDouble(0);
+        return photonCamera.getLatestResult().getLatencyMillis();
     }
 
-    public double getTargetShort() {
-        return limelight.getEntry("tshort").getDouble(0);
-    }
-
-    public double getTargetLong() {
-        return limelight.getEntry("tlong").getDouble(0);
-    }
-
-    public double getHorizontalSidelength() {
-        return limelight.getEntry("thor").getDouble(0);
-    }
-
-    public double getVerticalSidelength() {
-        return limelight.getEntry("tvert").getDouble(0);
-    }
-
-    public double getPipeline() {
-        return limelight.getEntry("getpipe").getDouble(0);
+    public int getPipeline() {
+        return photonCamera.getPipelineIndex();
     }
 
     public void setPipeline(int pipeline) {
-        limelight.getEntry("pipeline").setNumber(pipeline);
+        photonCamera.setPipelineIndex(pipeline);
     }
 
     public void ledsOn() {
-        limelight.getEntry("ledMode").setNumber(3);
+        photonCamera.setLED(LEDMode.kOn);
     }
-
     public void ledsOff() {
-        limelight.getEntry("ledMode").setNumber(1);
+        photonCamera.setLED(LEDMode.kOff);
     }
 
     // Calculate target distance based on field dimensions and the angle from the Limelight to the target
@@ -267,11 +276,11 @@ public class Vision extends SubsystemBase {
     public double getPowerCellX() {
         // TODO: Calculate degrees from pixels?
         // return openSight.getEntry("found-x").getDouble(0) * 5.839; // 5.839 pixels per degree
-        return openSight.getEntry("found-x").getDouble(0);
+        return 0;
     }
 
     public boolean hasPowerCell() {
-        return openSight.getEntry("found").getBoolean(false);
+        return false;
     }
 
     private void initShuffleboard() {
@@ -298,5 +307,10 @@ public class Vision extends SubsystemBase {
         updateValidTarget();
 
         //resetPoseByVision();
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        simPhotonCamera.processFrame(m_driveTrain.getRobotPose());
     }
 }
