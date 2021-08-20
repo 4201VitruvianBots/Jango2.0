@@ -73,6 +73,7 @@ public class LED extends SubsystemBase {
     for(int i = 0; i < LEDBuffer.getLength(); i++){
       LEDBuffer.setRGB(i, red, green, blue);
     }
+}
 
     public void resetLED() {
         for(int i = 0; i < LEDBuffer.getLength(); i++) {

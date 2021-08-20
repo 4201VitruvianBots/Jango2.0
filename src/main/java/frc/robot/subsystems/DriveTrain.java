@@ -18,6 +18,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.unmanaged.Unmanaged;
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -48,7 +53,7 @@ public class DriveTrain extends SubsystemBase {
     private final double kV = DriveConstants.kvVoltSecondsPerMeter;
     private final double kA = DriveConstants.kaVoltSecondsSquaredPerMeter;;
 
-    public double kP = 1.94;//Constants.DriveConstants.inSlowGear ? 1.89 : 2.74; //1.33
+    public double kP = 2.37;//3/21/21//Constants.DriveConstants.inSlowGear ? 1.89 : 2.74; //1.33
     public double kI = 0;
     public double kD = 0;
     public int controlMode = 0;
@@ -63,11 +68,18 @@ public class DriveTrain extends SubsystemBase {
 
     PowerDistributionPanel m_pdp;
 
-    private final TalonFX[] driveMotors = {
-            new TalonFX(Constants.leftFrontDriveMotor),
-            new TalonFX(Constants.leftRearDriveMotor),
-            new TalonFX(Constants.rightFrontDriveMotor),
-            new TalonFX(Constants.rightRearDriveMotor)
+    private final CANSparkMax[] driveMotors = {
+            new CANSparkMax(Constants.leftFrontDriveMotor, MotorType.kBrushless),
+            new CANSparkMax(Constants.leftRearDriveMotor, MotorType.kBrushless),
+            new CANSparkMax(Constants.rightFrontDriveMotor, MotorType.kBrushless),
+            new CANSparkMax(Constants.rightRearDriveMotor, MotorType.kBrushless)
+    };
+
+    private final CANEncoder[] encoders = {
+        driveMotors[0].getEncoder(),
+        driveMotors[1].getEncoder(),
+        driveMotors[2].getEncoder(),
+        driveMotors[3].getEncoder()
     };
     double m_leftOutput, m_rightOutput;
 
@@ -78,7 +90,6 @@ public class DriveTrain extends SubsystemBase {
             false
     };
 
-    //Set up shifters
     DoubleSolenoid driveTrainShifters = new DoubleSolenoid(Constants.pcmOne, Constants.driveTrainShiftersForward, Constants.driveTrainShiftersReverse);
     private boolean m_driveShifterState;
 
@@ -122,7 +133,7 @@ public class DriveTrain extends SubsystemBase {
 //                VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)),
 //                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
-        if (RobotBase.isSimulation()) { // If our robot is simulated
+        /*if (RobotBase.isSimulation()) { // If our robot is simulated
             for(int i = 0; i < 4; i++)
                 simMotors[i] = new TalonSRX(24 + i);
             configureCtreMotors(simMotors);
@@ -152,13 +163,13 @@ public class DriveTrain extends SubsystemBase {
 //            m_leftEncoderSim = new EncoderSim(m_leftEncoder);
 //            m_rightEncoderSim = new EncoderSim(m_rightEncoder);
             m_gyroAngleSim = new ADXRS450_GyroSim(m_gyro);
-        }
+        }*/
         SmartDashboard.putData("DT Subsystem", this);
     }
 
-    public void configureCtreMotors(BaseTalon... motors) {
+    public void configureCtreMotors(CANSparkMax... motors) {
         for(int i = 0; i < motors.length; i++) {
-            motors[i].configFactoryDefault();
+            motors[i].restoreFactoryDefaults();
 //            motor.configVoltageCompSaturation(12);
 //            motor.enableVoltageCompensation(true);
             // motor.configGetSupplyCurrentLimit(30);
@@ -166,19 +177,21 @@ public class DriveTrain extends SubsystemBase {
             // motor.configPeakCurrentDuration(1000);
             // motor.enableCurrentLimit(true);
 
-            motors[i].configOpenloopRamp(0.1);
-            motors[i].configClosedloopRamp(0.1);
-            motors[i].setNeutralMode(NeutralMode.Coast);
-            motors[i].configForwardSoftLimitEnable(false);
-            motors[i].configReverseSoftLimitEnable(false);
+            motors[i].setIdleMode(IdleMode.kCoast);
 
-            if(motors[i] instanceof TalonFX) {
-                driveMotors[i].configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 0, 0));
-                driveMotors[i].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-            } else if(motors[i] instanceof TalonSRX) {
-                simMotors[i].configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 0, 0));
-                simMotors[i].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-            }
+            // motors[i].configOpenloopRamp(0.1);
+            // motors[i].configClosedloopRamp(0.1);
+            //motors[i].setNeutralMode(NeutralMode.Coast);
+            // motors[i].configForwardSoftLimitEnable(false);
+            // motors[i].configReverseSoftLimitEnable(false);
+
+            // if(motors[i] instanceof TalonFX) {
+            //     driveMotors[i].configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 0, 0));
+            //     driveMotors[i].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+            // } else if(motors[i] instanceof TalonSRX) {
+            //     simMotors[i].configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 0, 0));
+            //     simMotors[i].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+            // }
         }
 
         motors[0].setInverted(true);
@@ -186,22 +199,20 @@ public class DriveTrain extends SubsystemBase {
         motors[2].setInverted(false);
         motors[3].setInverted(false);
 
-        motors[0].setSensorPhase(false);
-        motors[2].setSensorPhase(false);
+        encoders[0].setInverted(false);
+        encoders[2].setInverted(false);
 
-        motors[1].set(ControlMode.Follower, driveMotors[0].getDeviceID());
-        motors[3].set(ControlMode.Follower, driveMotors[2].getDeviceID());
-        motors[1].setNeutralMode(NeutralMode.Brake);
-        motors[3].setNeutralMode(NeutralMode.Brake);
+        motors[1].follow(driveMotors[0]);
+        motors[3].follow(driveMotors[2]);
+        motors[1].setIdleMode(IdleMode.kBrake);
+        motors[3].setIdleMode(IdleMode.kBrake);
 
-        motors[1].configOpenloopRamp(0);
-        motors[3].configOpenloopRamp(0);
+        motors[1].setOpenLoopRampRate(0);
+        motors[3].setOpenLoopRampRate(0);
     }
 
-    // Self-explanatory functions
-
-    public int getEncoderCount(int sensorIndex) {
-        return driveMotors[sensorIndex].getSelectedSensorPosition();
+    public double getEncoderCount(int sensorIndex) {
+        return encoders[sensorIndex].getPosition() * 4096;
     }
 
     public double getAngle() {
@@ -231,7 +242,7 @@ public class DriveTrain extends SubsystemBase {
 //        double gearRatio = gearRatioHigh;
 
         if(RobotBase.isReal())
-            return (driveMotors[sensorIndex].getSelectedSensorPosition() / 2048.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            return encoders[sensorIndex].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
         else {
             return (simMotors[sensorIndex].getSelectedSensorPosition() / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
 //            if(sensorIndex == 0)
@@ -243,14 +254,13 @@ public class DriveTrain extends SubsystemBase {
             }
     }
 
-    // ???
     public double getMotorInputCurrent(int motorIndex) {
-        return driveMotors[motorIndex].getSupplyCurrent();
+        return driveMotors[motorIndex].getOutputCurrent();
     }
 
     public void resetEncoderCounts() {
-        driveMotors[0].setSelectedSensorPosition(0);
-        driveMotors[2].setSelectedSensorPosition(0);
+        encoders[0].setPosition(0);
+        encoders[2].setPosition(0);
         if(RobotBase.isSimulation()) {
 //            m_leftEncoder.reset();
 //            m_rightEncoder.reset();;
@@ -314,8 +324,8 @@ public class DriveTrain extends SubsystemBase {
     private void setMotorPercentOutput(double leftOutput, double rightOutput) {
         m_leftOutput = leftOutput;
         m_rightOutput = rightOutput;
-        driveMotors[0].set(ControlMode.PercentOutput, leftOutput);
-        driveMotors[2].set(ControlMode.PercentOutput, rightOutput);
+        driveMotors[0].set(leftOutput);
+        driveMotors[2].set(rightOutput);
 
         if(RobotBase.isSimulation()) {
             simMotors[0].set(ControlMode.PercentOutput, leftOutput);
@@ -323,27 +333,26 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
-    // Make motors neutral
     public void setDriveTrainNeutralMode(int mode) {
         switch(mode) {
             case 2:
                 for(var motor : driveMotors)
-                    motor.setNeutralMode(NeutralMode.Coast);
+                    motor.setIdleMode(IdleMode.kCoast);
                 for(var brakeMode : brakeMode)
                     brakeMode = false;
                 break;
             case 1:
                 for(var motor : driveMotors)
-                    motor.setNeutralMode(NeutralMode.Brake);
+                motor.setIdleMode(IdleMode.kBrake);
                 for(var brakeMode : brakeMode)
                     brakeMode = true;
                 break;
             case 0:
             default:
-                driveMotors[0].setNeutralMode(NeutralMode.Brake);
-                driveMotors[1].setNeutralMode(NeutralMode.Coast);
-                driveMotors[2].setNeutralMode(NeutralMode.Brake);
-                driveMotors[3].setNeutralMode(NeutralMode.Coast);
+                driveMotors[0].setIdleMode(IdleMode.kBrake);
+                driveMotors[1].setIdleMode(IdleMode.kCoast);
+                driveMotors[2].setIdleMode(IdleMode.kBrake);
+                driveMotors[3].setIdleMode(IdleMode.kCoast);
                 brakeMode[0] = true;
                 brakeMode[1] = false;
                 brakeMode[2] = true;
@@ -374,9 +383,9 @@ public class DriveTrain extends SubsystemBase {
         double leftMetersPerSecond = 0, rightMetersPerSecond = 0;
 
         if(RobotBase.isReal()) {
-//             getSelectedSensorVelocity() returns values in units per 100ms. Need to convert value to RPS
-            leftMetersPerSecond = (driveMotors[0].getSelectedSensorVelocity() * 10.0 / 2048.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
-            rightMetersPerSecond = (driveMotors[2].getSelectedSensorVelocity() * 10.0 / 2048.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+//             getVelocity() returns values in RPM. Need to convert value to RPS
+            leftMetersPerSecond = (encoders[0].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            rightMetersPerSecond = (encoders[2].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
         } else {
             // This is apparently causing issues to the sim where the robot does not fully reach the endpoint. My assumption
             // at the moment is that we need to re-characterize the drivetrain to get new values. I believe David noticed this
@@ -396,8 +405,8 @@ public class DriveTrain extends SubsystemBase {
         double leftMeters, rightMeters;
 
         if(RobotBase.isReal()) {
-            leftMeters = (driveMotors[0].getSelectedSensorPosition() * 10.0 / 2048) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
-            rightMeters = (driveMotors[2].getSelectedSensorPosition() * 10.0 / 2048) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            leftMeters = encoders[0].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            rightMeters = encoders[2].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
             return (leftMeters + rightMeters) / 2.0;
         } else {
 //            leftMeters = m_leftEncoder.getDistance();
@@ -453,6 +462,7 @@ public class DriveTrain extends SubsystemBase {
         Shuffleboard.getTab("Drive Train").addNumber("rightSpeed", () ->
                 Units.metersToFeet(getSpeeds().rightMetersPerSecond));
 
+
         Shuffleboard.getTab("Turret").addNumber("Robot Angle", navX :: getAngle);
     }
 
@@ -469,6 +479,8 @@ public class DriveTrain extends SubsystemBase {
                     Units.metersToFeet(getSpeeds().leftMetersPerSecond));
             SmartDashboardTab.putNumber("DriveTrain", "rightSpeed",
                     Units.metersToFeet(getSpeeds().rightMetersPerSecond));
+            SmartDashboardTab.putBoolean("DriveTrain","high gear",
+                    getDriveShifterStatus());
 
             SmartDashboardTab.putNumber("Turret", "Robot Angle", getAngle());
         } else {

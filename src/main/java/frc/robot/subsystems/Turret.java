@@ -174,12 +174,14 @@ public class Turret extends SubsystemBase {
         return Math.abs(turretMotor.getClosedLoopError()) < kErrorBand;
     }
 
-    // ???
     public void clearIAccum() {
         turretMotor.setIntegralAccumulator(0);
     }
 
-    // ???
+    private boolean getTurretLatch() {
+        return turretHomeSensorLatch;
+    }
+
     private void setTurretLatch(boolean state) {
         turretHomeSensorLatch = state;
     }

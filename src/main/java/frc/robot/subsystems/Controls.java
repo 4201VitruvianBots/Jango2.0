@@ -35,7 +35,6 @@ public class Controls extends SubsystemBase {
     AnalogInput PressureSensor = new AnalogInput(0);
     private boolean lcdOn = true;
 
-    AnalogInput PressureSensor = new AnalogInput(0);
 
     // Set up subsystems
 
