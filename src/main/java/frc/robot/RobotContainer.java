@@ -67,21 +67,20 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final PowerDistributionPanel pdp = new PowerDistributionPanel();
     private final DriveTrain m_driveTrain = new DriveTrain(pdp);
-    private final Intake m_intake = new Intake();
-    private final Indexer m_indexer = new Indexer();
-    private final Turret m_turret = new Turret(m_driveTrain);
-    private final Vision m_vision = new Vision(m_driveTrain, m_turret);
-    private final Shooter m_shooter = new Shooter(m_vision, pdp);
-    private final Climber m_climber = new Climber();
-    private final Skyhook m_skyhook = new Skyhook();
-    private final ColorSensor m_colorSensor = new ColorSensor();
-    private final LED m_led = new LED(m_colorSensor);
-    private final Controls m_controls = new Controls(m_driveTrain, m_shooter, m_turret, pdp);
+    // private final Intake m_intake = new Intake();
+    // private final Indexer m_indexer = new Indexer();
+    // private final Turret m_turret = new Turret(m_driveTrain);
+    // private final Vision m_vision = new Vision(m_driveTrain, m_turret);
+    // private final Shooter m_shooter = new Shooter(m_vision, pdp);
+    // private final Climber m_climber = new Climber();
+    // private final Skyhook m_skyhook = new Skyhook();
+    // private final ColorSensor m_colorSensor = new ColorSensor();
+    // private final LED m_led = new LED(m_colorSensor);
+    // private final Controls m_controls = new Controls(m_driveTrain, m_shooter, m_turret, pdp);
 
     static JoystickWrapper leftJoystick = new JoystickWrapper(Constants.leftJoystick);
     static JoystickWrapper rightJoystick = new JoystickWrapper(Constants.rightJoystick);
     static JoystickWrapper xBoxController = new JoystickWrapper(Constants.xBoxController);
-    private ShootOnTheMove m_ShootOnTheMove;
     private final SelectCommand m_autoCommand;
     public Button[] leftButtons = new Button[2];
     public Button[] rightButtons = new Button[2];
@@ -132,7 +131,6 @@ public class RobotContainer {
 
         SmartDashboard.putData(m_autoChooser);
 
-        GetSOTMTestPowers variableTestPowers = new GetSOTMTestPowers(0.22, 7);
         double startTimestamp = Timer.getFPGATimestamp();
 
         m_autoCommand = new SelectCommand(
@@ -144,11 +142,11 @@ public class RobotContainer {
                         //        () -> variableTestPowers.getVariablePower(Timer.getFPGATimestamp() - startTimestamp))),
                         //entry(CommandSelector.SOTM_ARC_CONSTANT, new SOTMWhileMovingConstant(m_driveTrain, m_ShootOnTheMove, m_indexer, 0.21, 0.15)), // Replace these values w/ something smart
 
-                        entry(CommandSelector.SHOOT_AND_DRIVE_BACK, new ShootAndDriveBack(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision)),
-                        entry(CommandSelector.DRIVE_STRAIGHT, new DriveBackwards(m_driveTrain)),
-                        entry(CommandSelector.DO_NOTHING, new DoNothing()),
-                        entry(CommandSelector.SHOOT_AND_DRIVE_FORWARD, new ShootAndDriveForward(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision)),
-                        entry(CommandSelector.ALLIANCE_TRENCH_STRAIGHT, new AllyTrenchPathStraight(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision))
+                        // entry(CommandSelector.SHOOT_AND_DRIVE_BACK, new ShootAndDriveBack(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision)),
+                        // entry(CommandSelector.DRIVE_STRAIGHT, new DriveBackwards(m_driveTrain)),
+                        // entry(CommandSelector.DO_NOTHING, new DoNothing()),
+                        // entry(CommandSelector.SHOOT_AND_DRIVE_FORWARD, new ShootAndDriveForward(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision)),
+                        // entry(CommandSelector.ALLIANCE_TRENCH_STRAIGHT, new AllyTrenchPathStraight(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision))
 //                        entry(CommandSelector.TEST_PATH, new TestAuto(m_driveTrain, m_shooter, m_indexer, m_intake)),
 //                        entry(CommandSelector.FULL_PATH, new AllyTrenchPathStraight(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision))
 //                        entry(CommandSelector.ENEMY_PATH, new EnemyAutoPath(m_driveTrain, m_shooter, m_indexer, m_intake, m_turret)),
@@ -179,28 +177,27 @@ public class RobotContainer {
 //        for(int i = 0; i < 6; i++)
 //            m_powercells[i] = new Powercell("PowerCell_" + i);
 
-        m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
+        //m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
 
         if(RobotBase.isReal()) {
-            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain, m_intake,
+            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain,
                     () -> leftJoystick.getRawAxis(1),
                     () -> rightJoystick.getRawAxis(0)));
 
-            m_led.setDefaultCommand(new GetSubsystemStates(this, m_led, m_indexer, m_intake, m_vision, m_turret, m_climber, m_colorSensor, m_controls));
+            //m_led.setDefaultCommand(new GetSubsystemStates(this, m_led, m_indexer, m_intake, m_vision, m_turret, m_climber, m_colorSensor, m_controls));
         }
         else {
             m_FieldSim.placeSkillPowercells(selectedSkillsChallenge);
-            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain, m_intake,
+            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain,
                     () -> testController.getRawAxis(1),
                     () -> testController.getRawAxis(2)));
         }
-        m_turret.setDefaultCommand(new SetTurretSetpointFieldAbsolute(m_turret, m_driveTrain, m_vision, m_shooter, m_climber, xBoxController));
+        //m_turret.setDefaultCommand(new SetTurretSetpointFieldAbsolute(m_turret, m_driveTrain, m_vision, m_shooter, m_climber, xBoxController));
 
 //    m_shooter.setDefaultCommand(new DefaultFlywheelRPM(m_shooter, m_vision));
 
-        m_climber.setDefaultCommand(new SetClimberOutput(m_climber, xBoxController));
-        m_skyhook.setDefaultCommand(new SetSkyhookOutput(m_climber, m_skyhook, () -> rightJoystick.getRawAxis(0)));
-        m_ShootOnTheMove = new ShootOnTheMove(m_turret, m_shooter, m_driveTrain, m_led, m_vision, new SimulationShoot(m_FieldSim, true),  m_FieldSim);
+        // m_climber.setDefaultCommand(new SetClimberOutput(m_climber, xBoxController));
+        // m_skyhook.setDefaultCommand(new SetSkyhookOutput(m_climber, m_skyhook, () -> rightJoystick.getRawAxis(0)));
     }
 
     /**
@@ -238,7 +235,7 @@ public class RobotContainer {
                 testButtons[i] = new JoystickButton(testController, (i + 1));
             //testButtons[0].whenPressed(new SimulationShoot(m_FieldSim, false));
 //            testButtons[3].toggleWhenPressed(m_ShootOnTheMove); // Y - Shoot on the Move
-            testButtons[0].whileHeld(new FeedAll(m_indexer));
+            //testButtons[0].whileHeld(new FeedAll(m_indexer));
         }
     }
 
@@ -250,35 +247,35 @@ public class RobotContainer {
 //    rightButtons[0].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 //    rightButtons[1].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 
-        xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
-        xBoxLeftTrigger.whileHeld(new ControlledIntake(m_intake, m_indexer, xBoxController)); // Deploy intake
+//         xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
+//         xBoxLeftTrigger.whileHeld(new ControlledIntake(m_intake, m_indexer, xBoxController)); // Deploy intake
 
-        xBoxButtons[1].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3575));                          // B - Set RPM Medium
-        xBoxButtons[2].whileHeld(new EjectAll(m_indexer, m_intake));                                  // X - Eject All
-        xBoxButtons[3].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3900));                          // Y - Set RPM Far
-        xBoxButtons[0].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3800));                          // A - Set RPM Close
+//         xBoxButtons[1].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3575));                          // B - Set RPM Medium
+//         xBoxButtons[2].whileHeld(new EjectAll(m_indexer, m_intake));                                  // X - Eject All
+//         xBoxButtons[3].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3900));                          // Y - Set RPM Far
+//         xBoxButtons[0].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3800));                          // A - Set RPM Close
 
-        //xBoxButtons[5].whileHeld(new RapidFire(m_shooter, m_indexer, m_intake, 3700));              // Set Distance RPM
-        xBoxRightTrigger.whileHeld(new RapidFireSetpoint(m_shooter, m_indexer, m_intake));            // flywheel on toggle
+//         //xBoxButtons[5].whileHeld(new RapidFire(m_shooter, m_indexer, m_intake, 3700));              // Set Distance RPM
+//         xBoxRightTrigger.whileHeld(new RapidFireSetpoint(m_shooter, m_indexer, m_intake));            // flywheel on toggle
 
-        xBoxButtons[6].whenPressed(new ToggleTurretControlMode(m_turret));                            // start - toggle control mode turret
-        //xBoxButtons[7].whenPressed(new ToggleIndexerControlMode(m_indexer));                        // select - toggle control mode uptake
-//        xBoxButtons[8].whenPressed(new DisableClimbMode(m_climber,m_turret)); //left stick
-        xBoxButtons[9].whenPressed(new EnableClimbMode(m_climber, m_turret));                         // R3 - toggle driver climb mode?
+//         xBoxButtons[6].whenPressed(new ToggleTurretControlMode(m_turret));                            // start - toggle control mode turret
+//         //xBoxButtons[7].whenPressed(new ToggleIndexerControlMode(m_indexer));                        // select - toggle control mode uptake
+// //        xBoxButtons[8].whenPressed(new DisableClimbMode(m_climber,m_turret)); //left stick
+//         xBoxButtons[9].whenPressed(new EnableClimbMode(m_climber, m_turret));                         // R3 - toggle driver climb mode?
 
-        xBoxPOVButtons[4].whenPressed(new ZeroTurretEncoder(m_turret));
+//         xBoxPOVButtons[4].whenPressed(new ZeroTurretEncoder(m_turret));
         //xBoxPOVButtons[4].whileHeld(new EjectAll(m_indexer, m_intake));
 //        SmartDashboard.putData("disable climb mode", new DisableClimbMode(m_climber,m_turret));
     }
 
     private void configGameChangersButtons() {
-        xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
-        xBoxLeftTrigger.whileHeld(new ControlledIntake(m_intake, m_indexer, xBoxController)); // Deploy intake
+        // xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
+        // xBoxLeftTrigger.whileHeld(new ControlledIntake(m_intake, m_indexer, xBoxController)); // Deploy intake
 
-        xBoxButtons[1].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 0));      // B - Green Zone
-        xBoxButtons[2].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 1));      // X - Yellow Zone
-        xBoxButtons[3].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 2));      // Y - Blue Zone
-        xBoxButtons[0].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 3));      // A - Red Zone
+        // xBoxButtons[1].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 0));      // B - Green Zone
+        // xBoxButtons[2].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 1));      // X - Yellow Zone
+        // xBoxButtons[3].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 2));      // Y - Blue Zone
+        // xBoxButtons[0].whenPressed(new AccuracyChallenge(m_driveTrain, m_shooter, m_indexer, m_FieldSim, 3));      // A - Red Zone
     }
 
     /**
@@ -292,7 +289,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        switch (selectedSkillsChallenge) {
+        return new DriveForwardDistance(m_driveTrain, m_FieldSim, 2);
+        /*switch (selectedSkillsChallenge) {
             case AUTO_NAV_BARREL:
                 return new AutoNavBarrel(m_driveTrain, m_FieldSim);
             case AUTO_NAV_BOUNCE:
@@ -315,7 +313,7 @@ public class RobotContainer {
             default:
                 System.out.println("Not a recognized skills command");
                 return null;
-        }
+        }*/
         
 //            return new SOTMSimulationAuto(m_driveTrain, m_intake, m_indexer, m_turret, m_shooter, m_vision, m_FieldSim, m_ShootOnTheMove);
             //return m_ShootOnTheMove;
@@ -365,7 +363,7 @@ public class RobotContainer {
     }
 
     public void initializeLogTopics() {
-        m_controls.initLogging();
+        //m_controls.initLogging();
     }
 
     /*private enum CommandSelector {
@@ -383,7 +381,7 @@ public class RobotContainer {
     }*/
 
     public void initalizeLogTopics() {
-        m_controls.initLogging();
+        //m_controls.initLogging();
     }
 
     public DriveTrain getRobotDrive() {

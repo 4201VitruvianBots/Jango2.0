@@ -45,8 +45,7 @@ import frc.robot.constants.Constants.DriveConstants;
 
 
 public class DriveTrain extends SubsystemBase {
-    private final double gearRatioHigh = 1.0 / 14.14;
-    private final double gearRatioLow = 1.0 / 7.49;
+    private final double gearRatio = 1.0 / 5.0; // 12 teeth on motor, 60 teeth on wheel
     private final double wheelDiameter = 0.5;
 
     private final double kS = DriveConstants.ksVolts;
@@ -238,8 +237,6 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getWheelDistanceMeters(int sensorIndex) {
-        double gearRatio = getDriveShifterStatus() ? gearRatioHigh : gearRatioLow;
-//        double gearRatio = gearRatioHigh;
 
         if(RobotBase.isReal())
             return encoders[sensorIndex].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
@@ -378,8 +375,6 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getSpeeds() {
-        double gearRatio = getDriveShifterStatus() ? gearRatioHigh : gearRatioLow;
-//        double gearRatio = gearRatioHigh;
         double leftMetersPerSecond = 0, rightMetersPerSecond = 0;
 
         if(RobotBase.isReal()) {
@@ -400,8 +395,6 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getTravelDistance() {
-        double gearRatio = getDriveShifterStatus() ? gearRatioHigh : gearRatioLow;
-//        double gearRatio = gearRatioHigh;
         double leftMeters, rightMeters;
 
         if(RobotBase.isReal()) {
@@ -589,7 +582,6 @@ public class DriveTrain extends SubsystemBase {
     }
 
     int distanceMetersToFalconFxUnits(double meters) {
-        double gearRatio = getDriveShifterStatus() ? gearRatioHigh : gearRatioLow;
 
         return (int) (meters * 2048.0 / (10 * gearRatio * Math.PI));
     }
