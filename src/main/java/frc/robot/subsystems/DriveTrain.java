@@ -74,12 +74,12 @@ public class DriveTrain extends SubsystemBase {
             new CANSparkMax(Constants.rightRearDriveMotor, MotorType.kBrushless)
     };
 
-    private final CANEncoder[] encoders = {
+    /*private final CANEncoder[] encoders = {
         driveMotors[0].getEncoder(),
         driveMotors[1].getEncoder(),
         driveMotors[2].getEncoder(),
         driveMotors[3].getEncoder()
-    };
+    };*/
     double m_leftOutput, m_rightOutput;
 
     private final boolean[] brakeMode = {
@@ -92,9 +92,9 @@ public class DriveTrain extends SubsystemBase {
     DoubleSolenoid driveTrainShifters = new DoubleSolenoid(Constants.pcmOne, Constants.driveTrainShiftersForward, Constants.driveTrainShiftersReverse);
     private boolean m_driveShifterState;
 
-    private final AHRS navX = new AHRS(SerialPort.Port.kMXP);
+    //private final AHRS navX = new AHRS(SerialPort.Port.kMXP);
 
-    private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+    //private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
 
 //    // The left-side drive encoder
 //    private final Encoder m_leftEncoder =
@@ -114,7 +114,7 @@ public class DriveTrain extends SubsystemBase {
     private final TalonSRX[] simMotors =  new TalonSRX[4];
 
     public DifferentialDrivetrainSim m_drivetrainSimulator;
-    private ADXRS450_GyroSim m_gyroAngleSim;
+    //private ADXRS450_GyroSim m_gyroAngleSim;
 
     private DoubleSupplier joystickCorrector = null; // A turning joystick to adjust trajectories during tele-op
 
@@ -198,8 +198,8 @@ public class DriveTrain extends SubsystemBase {
         motors[2].setInverted(false);
         motors[3].setInverted(false);
 
-        encoders[0].setInverted(false);
-        encoders[2].setInverted(false);
+        // encoders[0].setInverted(false);
+        // encoders[2].setInverted(false);
 
         motors[1].follow(driveMotors[0]);
         motors[3].follow(driveMotors[2]);
@@ -211,35 +211,40 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getEncoderCount(int sensorIndex) {
-        return encoders[sensorIndex].getPosition() * 4096;
+        return 0;//return encoders[sensorIndex].getPosition() * 4096;
     }
 
     public double getAngle() {
         if(RobotBase.isReal())
-            return navX.getAngle();
+            return 0;
+            //return navX.getAngle();
         else
-            return m_gyro.getAngle();
+            return 0;
+            //return m_gyro.getAngle();
     }
 
     public double getHeading() {
         if(RobotBase.isReal())
-            return Math.IEEEremainder(-navX.getAngle(), 360);
+            return 0;
+           // return Math.IEEEremainder(-navX.getAngle(), 360);
         else
-            return Math.IEEEremainder(m_gyro.getAngle(), 360) * (Constants.DriveConstants.kGyroReversed ? -1.0 : 1.0);
+            return 0;
+            //return Math.IEEEremainder(m_gyro.getAngle(), 360) * (Constants.DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     public void resetAngle() {
-        navX.zeroYaw();
+        //navX.zeroYaw();
     }
 
     public void setNavXOffset(double angle) { // Angle in degrees
-        navX.setAngleAdjustment(angle);
+        //navX.setAngleAdjustment(angle);
     }
 
     public double getWheelDistanceMeters(int sensorIndex) {
 
         if(RobotBase.isReal())
-            return encoders[sensorIndex].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            return 0;
+            //return encoders[sensorIndex].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
         else {
             return (simMotors[sensorIndex].getSelectedSensorPosition() / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
 //            if(sensorIndex == 0)
@@ -256,8 +261,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void resetEncoderCounts() {
-        encoders[0].setPosition(0);
-        encoders[2].setPosition(0);
+        // encoders[0].setPosition(0);
+        // encoders[2].setPosition(0);
         if(RobotBase.isSimulation()) {
 //            m_leftEncoder.reset();
 //            m_rightEncoder.reset();;
@@ -379,8 +384,8 @@ public class DriveTrain extends SubsystemBase {
 
         if(RobotBase.isReal()) {
 //             getVelocity() returns values in RPM. Need to convert value to RPS
-            leftMetersPerSecond = (encoders[0].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
-            rightMetersPerSecond = (encoders[2].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            leftMetersPerSecond = 0;//(encoders[0].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            rightMetersPerSecond = 0;//(encoders[2].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
         } else {
             // This is apparently causing issues to the sim where the robot does not fully reach the endpoint. My assumption
             // at the moment is that we need to re-characterize the drivetrain to get new values. I believe David noticed this
@@ -398,8 +403,8 @@ public class DriveTrain extends SubsystemBase {
         double leftMeters, rightMeters;
 
         if(RobotBase.isReal()) {
-            leftMeters = encoders[0].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
-            rightMeters = encoders[2].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            leftMeters = 0;//encoders[0].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            rightMeters = 0;//encoders[2].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
             return (leftMeters + rightMeters) / 2.0;
         } else {
 //            leftMeters = m_leftEncoder.getDistance();
@@ -435,9 +440,9 @@ public class DriveTrain extends SubsystemBase {
             resetEncoderCounts();
             m_drivetrainSimulator.setPose(pose);
         }
-        setNavXOffset(rotation.getDegrees());
+        //setNavXOffset(rotation.getDegrees());
         odometry.resetPosition(pose, rotation);
-        resetEncoderCounts();
+        //resetEncoderCounts();
     }
 
     private void initShuffleboardValues() {
@@ -456,7 +461,7 @@ public class DriveTrain extends SubsystemBase {
                 Units.metersToFeet(getSpeeds().rightMetersPerSecond));
 
 
-        Shuffleboard.getTab("Turret").addNumber("Robot Angle", navX :: getAngle);
+        //Shuffleboard.getTab("Turret").addNumber("Robot Angle", navX :: getAngle);
     }
 
     private void updateSmartDashboard() {
@@ -544,7 +549,7 @@ public class DriveTrain extends SubsystemBase {
         simMotors[0].getSimCollection().setQuadratureVelocity(velocityMetersToTalonSrxUnits(m_drivetrainSimulator.getLeftVelocityMetersPerSecond()));
         simMotors[2].getSimCollection().setQuadraturePosition(distanceMetersToTalonSrxUnits(m_drivetrainSimulator.getRightPositionMeters()));
         simMotors[2].getSimCollection().setQuadratureVelocity(velocityMetersToTalonSrxUnits(m_drivetrainSimulator.getRightVelocityMetersPerSecond()));
-        m_gyroAngleSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
+        //m_gyroAngleSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
 
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putNumber("Robot Angle", getAngle());

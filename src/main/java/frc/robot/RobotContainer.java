@@ -33,6 +33,7 @@ import frc.robot.commands.drivetrain.SetArcadeDrive;
 import frc.robot.commands.drivetrain.SetDriveNeutralMode;
 import frc.robot.commands.drivetrain.SetDriveShifters;
 import frc.robot.commands.drivetrain.SetOdometry;
+import frc.robot.commands.drivetrain.SetTankDrive;
 import frc.robot.commands.indexer.EjectAll;
 import frc.robot.commands.indexer.FeedAll;
 import frc.robot.commands.intake.AutoControlledIntake;
@@ -180,9 +181,9 @@ public class RobotContainer {
         //m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
 
         if(RobotBase.isReal()) {
-            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain,
+            m_driveTrain.setDefaultCommand(new SetTankDrive(m_driveTrain,
                     () -> leftJoystick.getRawAxis(1),
-                    () -> rightJoystick.getRawAxis(0)));
+                    () -> rightJoystick.getRawAxis(1)));
 
             //m_led.setDefaultCommand(new GetSubsystemStates(this, m_led, m_indexer, m_intake, m_vision, m_turret, m_climber, m_colorSensor, m_controls));
         }
@@ -335,9 +336,9 @@ public class RobotContainer {
 
     public void teleOpInit() {
         if(RobotBase.isReal()) {
-            m_driveTrain.resetEncoderCounts();
-            m_driveTrain.resetOdometry(m_FieldSim.getRobotPose(), m_FieldSim.getRobotPose().getRotation());
-            m_driveTrain.setDriveTrainNeutralMode(2); // All in coast; change this maybe
+            // m_driveTrain.resetEncoderCounts();
+            // m_driveTrain.resetOdometry(m_FieldSim.getRobotPose(), m_FieldSim.getRobotPose().getRotation());
+            // m_driveTrain.setDriveTrainNeutralMode(2); // All in coast; change this maybe
         } else {
             m_driveTrain.resetEncoderCounts();
             m_driveTrain.resetOdometry(m_FieldSim.getRobotPose(), m_FieldSim.getRobotPose().getRotation());
