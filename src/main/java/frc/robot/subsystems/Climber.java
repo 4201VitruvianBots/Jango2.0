@@ -60,7 +60,7 @@ public class Climber extends SubsystemBase {
         climbMotor.set(ControlMode.PercentOutput, value);
     }
 
-    public int getClimberPosition() {
+    public double getClimberPosition() {
         return climbMotor.getSelectedSensorPosition();
     }
 

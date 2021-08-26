@@ -89,7 +89,7 @@ public class DriveTrain extends SubsystemBase {
             false
     };
 
-    DoubleSolenoid driveTrainShifters = new DoubleSolenoid(Constants.pcmOne, Constants.driveTrainShiftersForward, Constants.driveTrainShiftersReverse);
+    //DoubleSolenoid driveTrainShifters = new DoubleSolenoid(Constants.pcmOne, Constants.driveTrainShiftersForward, Constants.driveTrainShiftersReverse);
     private boolean m_driveShifterState;
 
     //private final AHRS navX = new AHRS(SerialPort.Port.kMXP);
@@ -111,7 +111,7 @@ public class DriveTrain extends SubsystemBase {
 //    private EncoderSim m_rightEncoderSim;
 
     // Temporary until CTRE supports FalconFX in WPILib Sim
-    private final TalonSRX[] simMotors =  new TalonSRX[4];
+    //private final TalonSRX[] simMotors =  new TalonSRX[4];
 
     public DifferentialDrivetrainSim m_drivetrainSimulator;
     //private ADXRS450_GyroSim m_gyroAngleSim;
@@ -246,7 +246,7 @@ public class DriveTrain extends SubsystemBase {
             return 0;
             //return encoders[sensorIndex].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
         else {
-            return (simMotors[sensorIndex].getSelectedSensorPosition() / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
+            return 0;//return (simMotors[sensorIndex].getSelectedSensorPosition() / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
 //            if(sensorIndex == 0)
 //                return m_leftEncoder.getDistance();
 //            else if(sensorIndex == 2)
@@ -266,8 +266,8 @@ public class DriveTrain extends SubsystemBase {
         if(RobotBase.isSimulation()) {
 //            m_leftEncoder.reset();
 //            m_rightEncoder.reset();;
-            simMotors[0].getSimCollection().setQuadraturePosition(0);
-            simMotors[2].getSimCollection().setQuadraturePosition(0);
+            // simMotors[0].getSimCollection().setQuadraturePosition(0);
+            // simMotors[2].getSimCollection().setQuadraturePosition(0);
         }
     }
 
@@ -330,8 +330,8 @@ public class DriveTrain extends SubsystemBase {
         driveMotors[2].set(rightOutput);
 
         if(RobotBase.isSimulation()) {
-            simMotors[0].set(ControlMode.PercentOutput, leftOutput);
-            simMotors[2].set(ControlMode.PercentOutput, rightOutput);
+            // simMotors[0].set(ControlMode.PercentOutput, leftOutput);
+            // simMotors[2].set(ControlMode.PercentOutput, rightOutput);
         }
     }
 
@@ -376,7 +376,7 @@ public class DriveTrain extends SubsystemBase {
 //        m_leftEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
 //        m_rightEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
 
-        driveTrainShifters.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+        //driveTrainShifters.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
     }
 
     public DifferentialDriveWheelSpeeds getSpeeds() {
@@ -409,8 +409,8 @@ public class DriveTrain extends SubsystemBase {
         } else {
 //            leftMeters = m_leftEncoder.getDistance();
 //            rightMeters =  m_rightEncoder.getDistance();
-            leftMeters = (simMotors[0].getSelectedSensorPosition() * 10.0 / 4096) * Math.PI * Units.feetToMeters(wheelDiameter);
-            rightMeters = (simMotors[2].getSelectedSensorPosition() * 10.0 / 4096) * Math.PI * Units.feetToMeters(wheelDiameter);
+            leftMeters = 0;//(simMotors[0].getSelectedSensorPosition() * 10.0 / 4096) * Math.PI * Units.feetToMeters(wheelDiameter);
+            rightMeters = 0;//(simMotors[2].getSelectedSensorPosition() * 10.0 / 4096) * Math.PI * Units.feetToMeters(wheelDiameter);
             return (leftMeters + rightMeters) / 2.0;
         }
     }
@@ -545,18 +545,18 @@ public class DriveTrain extends SubsystemBase {
 
         // For CTRE devices, you must call this function periodically for simulation
         Unmanaged.feedEnable(40);
-        simMotors[0].getSimCollection().setQuadraturePosition(distanceMetersToTalonSrxUnits(m_drivetrainSimulator.getLeftPositionMeters()));
-        simMotors[0].getSimCollection().setQuadratureVelocity(velocityMetersToTalonSrxUnits(m_drivetrainSimulator.getLeftVelocityMetersPerSecond()));
-        simMotors[2].getSimCollection().setQuadraturePosition(distanceMetersToTalonSrxUnits(m_drivetrainSimulator.getRightPositionMeters()));
-        simMotors[2].getSimCollection().setQuadratureVelocity(velocityMetersToTalonSrxUnits(m_drivetrainSimulator.getRightVelocityMetersPerSecond()));
+        // simMotors[0].getSimCollection().setQuadraturePosition(distanceMetersToTalonSrxUnits(m_drivetrainSimulator.getLeftPositionMeters()));
+        // simMotors[0].getSimCollection().setQuadratureVelocity(velocityMetersToTalonSrxUnits(m_drivetrainSimulator.getLeftVelocityMetersPerSecond()));
+        // simMotors[2].getSimCollection().setQuadraturePosition(distanceMetersToTalonSrxUnits(m_drivetrainSimulator.getRightPositionMeters()));
+        // simMotors[2].getSimCollection().setQuadratureVelocity(velocityMetersToTalonSrxUnits(m_drivetrainSimulator.getRightVelocityMetersPerSecond()));
         //m_gyroAngleSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
 
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putNumber("Robot Angle", getAngle());
-        SmartDashboard.putNumber("L Encoder Count", simMotors[0].getSelectedSensorPosition());
-        SmartDashboard.putNumber("R Encoder Count", simMotors[2].getSelectedSensorPosition());
-        SmartDashboard.putNumber("L Encoder Rate", simMotors[0].getSelectedSensorVelocity());
-        SmartDashboard.putNumber("R Encoder Rate", simMotors[2].getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("L Encoder Count", simMotors[0].getSelectedSensorPosition());
+        // SmartDashboard.putNumber("R Encoder Count", simMotors[2].getSelectedSensorPosition());
+        // SmartDashboard.putNumber("L Encoder Rate", simMotors[0].getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("R Encoder Rate", simMotors[2].getSelectedSensorVelocity());
 
         SmartDashboard.putNumber("L Output", m_leftOutput);
         SmartDashboard.putNumber("R Output", m_rightOutput);
