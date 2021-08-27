@@ -193,8 +193,8 @@ public class DriveTrain extends SubsystemBase {
             // }
         }
 
-        motors[0].setInverted(true);
-        motors[1].setInverted(true);
+        motors[0].setInverted(false);
+        motors[1].setInverted(false);
         motors[2].setInverted(false);
         motors[3].setInverted(false);
 

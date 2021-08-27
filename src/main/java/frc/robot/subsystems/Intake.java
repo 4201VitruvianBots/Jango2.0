@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -27,15 +30,15 @@ public class Intake extends SubsystemBase {
     private final double maxAccel = 58800;
     private final double gearRatio = 1.0 / 3.0;
     // Intake motor setup
-    private final CANSparkMax intakeMotor = new CANSparkMax(Constants.intakeMotor, MotorType.kBrushless);
+    private final TalonFX intakeMotor = new TalonFX(Constants.intakeMotor);
     DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
     //  private CANEncoder intakeEncoder = intakeMotor.getEncoder();
 //  private CANPIDController canPidController = intakeMotor.getPIDController();
     private boolean intaking = false;
 
     public Intake() {
-        intakeMotor.restoreFactoryDefaults();
-        intakeMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        intakeMotor.configFactoryDefault();
+        intakeMotor.setNeutralMode(NeutralMode.Brake);
         intakeMotor.setInverted(false);
 
 //    canPidController.setFF(kFF);
@@ -67,7 +70,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setIntakePercentOutput(double value) {
-        intakeMotor.set(value);
+        intakeMotor.set(ControlMode.PercentOutput, value);
     }
 
 //  public double getRPM(){
