@@ -30,16 +30,16 @@ public class Intake extends SubsystemBase {
     private final double maxAccel = 58800;
     private final double gearRatio = 1.0 / 3.0;
     // Intake motor setup
-    private final TalonFX intakeMotor = new TalonFX(Constants.intakeMotor);
+    // private final TalonFX intakeMotor = new TalonFX(Constants.intakeMotor);
     DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
     //  private CANEncoder intakeEncoder = intakeMotor.getEncoder();
 //  private CANPIDController canPidController = intakeMotor.getPIDController();
     private boolean intaking = false;
 
     public Intake() {
-        intakeMotor.configFactoryDefault();
-        intakeMotor.setNeutralMode(NeutralMode.Brake);
-        intakeMotor.setInverted(false);
+        // intakeMotor.configFactoryDefault();
+        // intakeMotor.setNeutralMode(NeutralMode.Brake);
+        // intakeMotor.setInverted(false);
 
 //    canPidController.setFF(kFF);
 //    canPidController.setP(kP);
@@ -70,7 +70,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setIntakePercentOutput(double value) {
-        intakeMotor.set(ControlMode.PercentOutput, value);
+        // intakeMotor.set(ControlMode.PercentOutput, value);
     }
 
 //  public double getRPM(){
