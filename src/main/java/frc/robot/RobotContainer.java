@@ -39,6 +39,7 @@ import frc.robot.commands.indexer.FeedAll;
 import frc.robot.commands.intake.AutoControlledIntake;
 import frc.robot.commands.intake.ControlledIntake;
 import frc.robot.commands.intake.SetIntakePiston;
+import frc.robot.commands.intake.SetIntakeSpeed;
 import frc.robot.commands.intake.ToggleIntakePistons;
 import frc.robot.commands.shooter.RapidFireSetpoint;
 import frc.robot.commands.shooter.SetRpmSetpoint;
@@ -245,6 +246,9 @@ public class RobotContainer {
         leftButtons[1].whileHeld(new SetDriveShifters(m_driveTrain, true));  // Bottom Button - Switch to low gear
 
         rightButtons[1].whileHeld(new BrakeWhileHeld(m_driveTrain));
+
+        // xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
+        xBoxLeftTrigger.whileHeld(new SetIntakeSpeed(m_intake, 0.25));
 //    rightButtons[0].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 //    rightButtons[1].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 
