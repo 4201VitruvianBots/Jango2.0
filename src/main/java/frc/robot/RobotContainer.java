@@ -182,9 +182,9 @@ public class RobotContainer {
         //m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
 
         if(RobotBase.isReal()) {
-            m_driveTrain.setDefaultCommand(new SetTankDrive(m_driveTrain,
+            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain,
                     () -> leftJoystick.getRawAxis(1),
-                    () -> rightJoystick.getRawAxis(1)));
+                    () -> rightJoystick.getRawAxis(0)));
 
             //m_led.setDefaultCommand(new GetSubsystemStates(this, m_led, m_indexer, m_intake, m_vision, m_turret, m_climber, m_colorSensor, m_controls));
         }
@@ -247,9 +247,10 @@ public class RobotContainer {
 
         rightButtons[1].whileHeld(new BrakeWhileHeld(m_driveTrain));
 
-        // xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
+        leftButtons[0].whenPressed(new SetIntakePiston(m_intake, true));
+        leftButtons[1].whenPressed(new SetIntakePiston(m_intake, false));
         xBoxLeftTrigger.whileHeld(new SetIntakeSpeed(m_intake, 0.25));
-//    rightButtons[0].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
+//    rightButtons[0].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoys%tick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 //    rightButtons[1].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 
 //         xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));

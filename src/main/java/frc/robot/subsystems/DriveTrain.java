@@ -195,8 +195,8 @@ public class DriveTrain extends SubsystemBase {
 
         motors[0].setInverted(false);
         motors[1].setInverted(false);
-        motors[2].setInverted(false);
-        motors[3].setInverted(false);
+        motors[2].setInverted(true);
+        motors[3].setInverted(true);
 
         // encoders[0].setInverted(false);
         // encoders[2].setInverted(false);
