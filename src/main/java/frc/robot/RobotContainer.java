@@ -211,7 +211,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         if(RobotBase.isReal()) {
             leftJoystick.invertRawAxis(1, true);
-            rightJoystick.invertRawAxis(0, true);
+            rightJoystick.invertRawAxis(0, false);
             xBoxController.invertRawAxis(1, true);
             xBoxController.invertRawAxis(5, true);
             for (int i = 0; i < leftButtons.length; i++)
