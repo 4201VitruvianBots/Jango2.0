@@ -26,6 +26,7 @@ import frc.robot.commands.autonomous.routines.*;
 import frc.robot.commands.autonomous.routines.simulation.OpRoutineRed;
 import frc.robot.commands.climber.DisableClimbMode;
 import frc.robot.commands.climber.EnableClimbMode;
+import frc.robot.commands.climber.SetClimbPiston;
 import frc.robot.commands.climber.SetClimberOutput;
 import frc.robot.commands.drivetrain.BrakeWhileHeld;
 import frc.robot.commands.drivetrain.DriveBackwardDistance;
@@ -76,7 +77,7 @@ public class RobotContainer {
     // private final Vision m_vision = new Vision(m_driveTrain, m_turret);
     // private final Shooter m_shooter = new Shooter(m_vision, pdp);
      private final Climber m_climber = new Climber();
-    // private final Skyhook m_skyhook = new Skyhook();
+    private final Skyhook m_skyhook = new Skyhook();
     // private final ColorSensor m_colorSensor = new ColorSensor();
     // private final LED m_led = new LED(m_colorSensor);
     // private final Controls m_controls = new Controls(m_driveTrain, m_shooter, m_turret, pdp);
@@ -200,7 +201,7 @@ public class RobotContainer {
 //    m_shooter.setDefaultCommand(new DefaultFlywheelRPM(m_shooter, m_vision));
 
          m_climber.setDefaultCommand(new SetClimberOutput(m_climber, xBoxController));
-        // m_skyhook.setDefaultCommand(new SetSkyhookOutput(m_climber, m_skyhook, () -> rightJoystick.getRawAxis(0)));
+        m_skyhook.setDefaultCommand(new SetSkyhookOutput(m_climber, m_skyhook, () -> xBoxController.getRawAxis(0)));
     }
 
     /**
@@ -248,8 +249,8 @@ public class RobotContainer {
 
         rightButtons[1].whileHeld(new BrakeWhileHeld(m_driveTrain));
 
-        leftButtons[0].whenPressed(new SetIntakePiston(m_intake, true));
-        leftButtons[1].whenPressed(new SetIntakePiston(m_intake, false));
+        // leftButtons[0].whenPressed(new SetIntakePiston(m_intake, true));
+        // leftButtons[1].whenPressed(new SetIntakePiston(m_intake, false));
         xBoxLeftTrigger.whileHeld(new SetIntakeSpeed(m_intake, 0.25));
 //    rightButtons[0].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoys%tick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 //    rightButtons[1].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
@@ -267,6 +268,8 @@ public class RobotContainer {
 
 //         xBoxButtons[6].whenPressed(new ToggleTurretControlMode(m_turret));                            // start - toggle control mode turret
 //         //xBoxButtons[7].whenPressed(new ToggleIndexerControlMode(m_indexer));                        // select - toggle control mode uptake
+        xBoxButtons[0].whenPressed(new SetClimbPiston(m_climber, false));        
+        xBoxButtons[1].whenPressed(new SetClimbPiston(m_climber, true));
         xBoxButtons[8].whenPressed(new DisableClimbMode(m_climber/*,m_turret*/)); //left stick
         xBoxButtons[9].whenPressed(new EnableClimbMode(m_climber/*, m_turret*/));                         // R3 - toggle driver climb mode?
 
@@ -342,6 +345,7 @@ public class RobotContainer {
 
     public void teleOpInit() {
         if(RobotBase.isReal()) {
+            m_climber.setClimbPiston(true);
             // m_driveTrain.resetEncoderCounts();
             // m_driveTrain.resetOdometry(m_FieldSim.getRobotPose(), m_FieldSim.getRobotPose().getRotation());
             // m_driveTrain.setDriveTrainNeutralMode(2); // All in coast; change this maybe

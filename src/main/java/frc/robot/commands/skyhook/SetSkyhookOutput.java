@@ -7,6 +7,7 @@
 
 package frc.robot.commands.skyhook;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Skyhook;
@@ -44,8 +45,10 @@ public class SetSkyhookOutput extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(m_climber.getClimbState())
-            m_skyhook.setSkyhook(m_output.getAsDouble());
+        SmartDashboardTab.putNumber("Skyhook", "Output", m_output.getAsDouble());
+        double output = m_output.getAsDouble();
+        if(m_climber.getClimbState() && Math.abs(output) > 0.25)
+            m_skyhook.setSkyhook(output);
     }
 
     // Called once the command ends or is interrupted.
