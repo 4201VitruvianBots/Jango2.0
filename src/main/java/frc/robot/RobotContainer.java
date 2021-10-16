@@ -299,7 +299,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new DriveForwardDistance(m_driveTrain, m_FieldSim, 2);
+        return new DriveForwardDistance(m_driveTrain, m_FieldSim, 1);
         /*switch (selectedSkillsChallenge) {
             case AUTO_NAV_BARREL:
                 return new AutoNavBarrel(m_driveTrain, m_FieldSim);

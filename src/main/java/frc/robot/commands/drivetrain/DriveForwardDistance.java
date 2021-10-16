@@ -37,7 +37,7 @@ public class DriveForwardDistance extends SequentialCommandGroup {
     public DriveForwardDistance(DriveTrain driveTrain, FieldSim fieldSim, double distance) { // Distance in meters
         Pose2d startPosition = new Pose2d();
         Pose2d endPosition = new Pose2d(distance, 0, new Rotation2d());
-        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(5), Units.feetToMeters(5));
+        TrajectoryConfig configA = new TrajectoryConfig(Units.feetToMeters(0.5), Units.feetToMeters(0.5));
         configA.setReversed(false);
         configA.setEndVelocity(0);
         configA.addConstraint(new DifferentialDriveKinematicsConstraint(driveTrain.getDriveTrainKinematics(), configA.getMaxVelocity()));
@@ -53,7 +53,7 @@ public class DriveForwardDistance extends SequentialCommandGroup {
                 // new SetDriveShifters(driveTrain, Constants.DriveConstants.inSlowGear),
                 new SetOdometry(driveTrain, fieldSim, startPosition),
                 new SetDriveNeutralMode(driveTrain,0),
-                driveForwardCommand
+                driveForwardCommand.withTimeout(3)
             );
     }
 }
