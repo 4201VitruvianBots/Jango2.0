@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
     private final double gearRatio = 1.0 / 3.0;
     // Intake motor setup
     private final TalonFX intakeMotor = new TalonFX(Constants.intakeMotor);
-    // DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
+    DoubleSolenoid intakePiston = new DoubleSolenoid(Constants.pcmOne, Constants.intakePistonForward, Constants.intakePistonReverse);
     //  private CANEncoder intakeEncoder = intakeMotor.getEncoder();
 //  private CANPIDController canPidController = intakeMotor.getPIDController();
     private boolean intaking = false;
@@ -62,11 +62,11 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean getIntakePistonExtendStatus() {
-        return true;//intakePiston.get() == DoubleSolenoid.Value.kForward;
+        return intakePiston.get() == DoubleSolenoid.Value.kForward;
     }
 
     public void setintakePiston(boolean state) {
-        // intakePiston.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+        intakePiston.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
     }
 
     public void setIntakePercentOutput(double value) {
