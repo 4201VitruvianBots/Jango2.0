@@ -6,8 +6,8 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Turret;
 
 public class DisableClimbMode extends SequentialCommandGroup {
-    public DisableClimbMode(Climber climber, Turret turret) {
-        addCommands(new SetTurretControlMode(turret, 1),
+    public DisableClimbMode(Climber climber/*, Turret turret*/) {
+        addCommands(/*new SetTurretControlMode(turret, 1),*/
                 new SetClimbMode(climber, false),
                 new RetractClimber(climber));
     }

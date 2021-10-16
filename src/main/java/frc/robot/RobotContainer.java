@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.LED.GetSubsystemStates;
 import frc.robot.commands.autonomous.routines.*;
 import frc.robot.commands.autonomous.routines.simulation.OpRoutineRed;
+import frc.robot.commands.climber.DisableClimbMode;
 import frc.robot.commands.climber.EnableClimbMode;
 import frc.robot.commands.climber.SetClimberOutput;
 import frc.robot.commands.drivetrain.BrakeWhileHeld;
@@ -74,7 +75,7 @@ public class RobotContainer {
     // private final Turret m_turret = new Turret(m_driveTrain);
     // private final Vision m_vision = new Vision(m_driveTrain, m_turret);
     // private final Shooter m_shooter = new Shooter(m_vision, pdp);
-    // private final Climber m_climber = new Climber();
+     private final Climber m_climber = new Climber();
     // private final Skyhook m_skyhook = new Skyhook();
     // private final ColorSensor m_colorSensor = new ColorSensor();
     // private final LED m_led = new LED(m_colorSensor);
@@ -198,7 +199,7 @@ public class RobotContainer {
 
 //    m_shooter.setDefaultCommand(new DefaultFlywheelRPM(m_shooter, m_vision));
 
-        // m_climber.setDefaultCommand(new SetClimberOutput(m_climber, xBoxController));
+         m_climber.setDefaultCommand(new SetClimberOutput(m_climber, xBoxController));
         // m_skyhook.setDefaultCommand(new SetSkyhookOutput(m_climber, m_skyhook, () -> rightJoystick.getRawAxis(0)));
     }
 
@@ -266,8 +267,8 @@ public class RobotContainer {
 
 //         xBoxButtons[6].whenPressed(new ToggleTurretControlMode(m_turret));                            // start - toggle control mode turret
 //         //xBoxButtons[7].whenPressed(new ToggleIndexerControlMode(m_indexer));                        // select - toggle control mode uptake
-// //        xBoxButtons[8].whenPressed(new DisableClimbMode(m_climber,m_turret)); //left stick
-//         xBoxButtons[9].whenPressed(new EnableClimbMode(m_climber, m_turret));                         // R3 - toggle driver climb mode?
+        xBoxButtons[8].whenPressed(new DisableClimbMode(m_climber/*,m_turret*/)); //left stick
+        xBoxButtons[9].whenPressed(new EnableClimbMode(m_climber/*, m_turret*/));                         // R3 - toggle driver climb mode?
 
 //         xBoxPOVButtons[4].whenPressed(new ZeroTurretEncoder(m_turret));
         //xBoxPOVButtons[4].whileHeld(new EjectAll(m_indexer, m_intake));
