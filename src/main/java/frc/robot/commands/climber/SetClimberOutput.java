@@ -103,7 +103,7 @@ public class SetClimberOutput extends CommandBase {
         m_controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.4);
         m_controller.setRumble(GenericHID.RumbleType.kRightRumble, 0.4);
         if(Math.abs(Timer.getFPGATimestamp() - timestamp) < 0.2)
-            m_climber.setClimberOutput(- 0.25);
+            m_climber.setClimberOutput(- 0.29);
         else {
             m_climber.setClimberOutput(0);
             movable = true;

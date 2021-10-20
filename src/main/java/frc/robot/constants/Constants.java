@@ -42,8 +42,8 @@ public final class Constants {
     public static final int flywheelMotorB = 41;
     public static final int colorWheelMotor = 45;
     public static final int climbMotorA = 50;
-    public static final int climbMotorB = 51;
-    public static final int skyhookMotor = 55;
+    //public static final int climbMotorB = 51;
+    public static final int skyhookMotor = 33;
     public static final int turretMotor = 60;
     public static final int turretEncoder = 61;
 
@@ -61,9 +61,9 @@ public final class Constants {
     public static final int driveTrainShiftersForward = 0;
     public static final int driveTrainShiftersReverse = 1;
     public static final int intakePistonForward = 0; // 2
-    public static final int intakePistonReverse = 1; // 3
-    public static final int climbPistonForward = 4;
-    public static final int climbPistonReverse = 5;
+    public static final int intakePistonReverse = 2; // 3
+    public static final int climbPistonForward = 3;
+    public static final int climbPistonReverse = 1;
 
     // Shoot on the Move
     public static final double g = 9.81; // Absolute value, in meters per second squared

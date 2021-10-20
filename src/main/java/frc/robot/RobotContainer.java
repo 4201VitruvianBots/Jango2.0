@@ -24,7 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.LED.GetSubsystemStates;
 import frc.robot.commands.autonomous.routines.*;
 import frc.robot.commands.autonomous.routines.simulation.OpRoutineRed;
+import frc.robot.commands.climber.DisableClimbMode;
 import frc.robot.commands.climber.EnableClimbMode;
+import frc.robot.commands.climber.SetClimbPiston;
 import frc.robot.commands.climber.SetClimberOutput;
 import frc.robot.commands.drivetrain.BrakeWhileHeld;
 import frc.robot.commands.drivetrain.DriveBackwardDistance;
@@ -74,8 +76,8 @@ public class RobotContainer {
     // private final Turret m_turret = new Turret(m_driveTrain);
     // private final Vision m_vision = new Vision(m_driveTrain, m_turret);
     // private final Shooter m_shooter = new Shooter(m_vision, pdp);
-    // private final Climber m_climber = new Climber();
-    // private final Skyhook m_skyhook = new Skyhook();
+     private final Climber m_climber = new Climber();
+    private final Skyhook m_skyhook = new Skyhook();
     // private final ColorSensor m_colorSensor = new ColorSensor();
     // private final LED m_led = new LED(m_colorSensor);
     // private final Controls m_controls = new Controls(m_driveTrain, m_shooter, m_turret, pdp);
@@ -182,9 +184,9 @@ public class RobotContainer {
         //m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
         
         if(RobotBase.isReal()) {
-            m_driveTrain.setDefaultCommand(new SetTankDrive(m_driveTrain,
+            m_driveTrain.setDefaultCommand(new SetArcadeDrive(m_driveTrain,
                     () -> leftJoystick.getRawAxis(1),
-                    () -> rightJoystick.getRawAxis(1)));
+                    () -> rightJoystick.getRawAxis(0)));
 
             //m_led.setDefaultCommand(new GetSubsystemStates(this, m_led, m_indexer, m_intake, m_vision, m_turret, m_climber, m_colorSensor, m_controls));
         }
@@ -198,8 +200,8 @@ public class RobotContainer {
 
 //    m_shooter.setDefaultCommand(new DefaultFlywheelRPM(m_shooter, m_vision));
 
-        // m_climber.setDefaultCommand(new SetClimberOutput(m_climber, xBoxController));
-        // m_skyhook.setDefaultCommand(new SetSkyhookOutput(m_climber, m_skyhook, () -> rightJoystick.getRawAxis(0)));
+         m_climber.setDefaultCommand(new SetClimberOutput(m_climber, xBoxController));
+        m_skyhook.setDefaultCommand(new SetSkyhookOutput(m_climber, m_skyhook, () -> xBoxController.getRawAxis(0)));
     }
 
     /**
@@ -211,7 +213,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         if(RobotBase.isReal()) {
             leftJoystick.invertRawAxis(1, true);
-            rightJoystick.invertRawAxis(0, true);
+            rightJoystick.invertRawAxis(0, false);
             xBoxController.invertRawAxis(1, true);
             xBoxController.invertRawAxis(5, true);
             for (int i = 0; i < leftButtons.length; i++)
@@ -247,12 +249,13 @@ public class RobotContainer {
 
         rightButtons[1].whileHeld(new BrakeWhileHeld(m_driveTrain));
 
-        // xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
+        // leftButtons[0].whenPressed(new SetIntakePiston(m_intake, true));
+        // leftButtons[1].whenPressed(new SetIntakePiston(m_intake, false));
         xBoxLeftTrigger.whileHeld(new SetIntakeSpeed(m_intake, 0.25));
-//    rightButtons[0].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
+//    rightButtons[0].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoys%tick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 //    rightButtons[1].whileHeld(new AlignToBall(m_driveTrain, m_vision, () -> leftJoystick.getRawAxis(1))); //Bottom (right) Button - Turn to powercells (Automated vision targeting
 
-//         xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
+        xBoxButtons[4].whenPressed(new ToggleIntakePistons(m_intake));
 //         xBoxLeftTrigger.whileHeld(new ControlledIntake(m_intake, m_indexer, xBoxController)); // Deploy intake
 
 //         xBoxButtons[1].whileHeld(new SetRpmSetpoint(m_shooter, m_vision, 3575));                          // B - Set RPM Medium
@@ -265,8 +268,10 @@ public class RobotContainer {
 
 //         xBoxButtons[6].whenPressed(new ToggleTurretControlMode(m_turret));                            // start - toggle control mode turret
 //         //xBoxButtons[7].whenPressed(new ToggleIndexerControlMode(m_indexer));                        // select - toggle control mode uptake
-// //        xBoxButtons[8].whenPressed(new DisableClimbMode(m_climber,m_turret)); //left stick
-//         xBoxButtons[9].whenPressed(new EnableClimbMode(m_climber, m_turret));                         // R3 - toggle driver climb mode?
+        xBoxButtons[0].whenPressed(new SetClimbPiston(m_climber, false));        
+        xBoxButtons[1].whenPressed(new SetClimbPiston(m_climber, true));
+        xBoxButtons[8].whenPressed(new DisableClimbMode(m_climber/*,m_turret*/)); //left stick
+        xBoxButtons[9].whenPressed(new EnableClimbMode(m_climber/*, m_turret*/));                         // R3 - toggle driver climb mode?
 
 //         xBoxPOVButtons[4].whenPressed(new ZeroTurretEncoder(m_turret));
         //xBoxPOVButtons[4].whileHeld(new EjectAll(m_indexer, m_intake));
@@ -340,6 +345,7 @@ public class RobotContainer {
 
     public void teleOpInit() {
         if(RobotBase.isReal()) {
+            m_climber.setClimbPiston(true);
             // m_driveTrain.resetEncoderCounts();
             // m_driveTrain.resetOdometry(m_FieldSim.getRobotPose(), m_FieldSim.getRobotPose().getRotation());
             // m_driveTrain.setDriveTrainNeutralMode(2); // All in coast; change this maybe
