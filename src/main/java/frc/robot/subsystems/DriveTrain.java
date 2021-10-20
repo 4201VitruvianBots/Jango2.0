@@ -19,7 +19,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.unmanaged.Unmanaged;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -52,7 +54,7 @@ public class DriveTrain extends SubsystemBase {
     private final double kV = DriveConstants.kvVoltSecondsPerMeter;
     private final double kA = DriveConstants.kaVoltSecondsSquaredPerMeter;;
 
-    public double kP = 2.37;//3/21/21//Constants.DriveConstants.inSlowGear ? 1.89 : 2.74; //1.33
+    public double kP = 4.6938e-5;
     public double kI = 0;
     public double kD = 0;
     public int controlMode = 0;
@@ -65,6 +67,7 @@ public class DriveTrain extends SubsystemBase {
     PIDController leftPIDController = new PIDController(kP, kI, kD);
     PIDController rightPIDController = new PIDController(kP, kI, kD);
 
+
     PowerDistributionPanel m_pdp;
 
     private final CANSparkMax[] driveMotors = {
@@ -74,12 +77,13 @@ public class DriveTrain extends SubsystemBase {
             new CANSparkMax(Constants.rightRearDriveMotor, MotorType.kBrushless)
     };
 
-    /*private final CANEncoder[] encoders = {
+
+    private final CANEncoder[] encoders = {
         driveMotors[0].getEncoder(),
         driveMotors[1].getEncoder(),
         driveMotors[2].getEncoder(),
         driveMotors[3].getEncoder()
-    };*/
+    };
     double m_leftOutput, m_rightOutput;
 
     private final boolean[] brakeMode = {
@@ -125,6 +129,21 @@ public class DriveTrain extends SubsystemBase {
         m_pdp = pdp;
         //initShuffleboardValues();
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+        driveMotors[0].setInverted(true);
+
+        driveMotors[1].follow(driveMotors[0]);
+        driveMotors[3].follow(driveMotors[2]);
+
+        driveMotors[0].getPIDController().setP(kP);
+        driveMotors[2].getPIDController().setP(kP);
+
+        driveMotors[0].getPIDController().setSmartMotionMaxVelocity(Constants.DriveConstants.maxVelocity, 0);
+        driveMotors[2].getPIDController().setSmartMotionMaxVelocity(Constants.DriveConstants.maxVelocity, 2);
+
+        driveMotors[0].getPIDController().setSmartMotionMaxAccel(Constants.DriveConstants.maxAcceleration, 0);
+        driveMotors[2].getPIDController().setSmartMotionMaxAccel(Constants.DriveConstants.maxAcceleration, 2);
+
 //        poseEstimator = new DifferentialDrivePoseEstimator(
 //                m_gyro.getRotation2d(),
 //                new Pose2d(),
@@ -243,8 +262,7 @@ public class DriveTrain extends SubsystemBase {
     public double getWheelDistanceMeters(int sensorIndex) {
 
         if(RobotBase.isReal())
-            return 0;
-            //return encoders[sensorIndex].getPosition() * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            return encoders[sensorIndex].getPosition() * Constants.DriveConstants.kEncoderDistancePerPulse;
         else {
             return 0;//return (simMotors[sensorIndex].getSelectedSensorPosition() / 4096.0) * Math.PI * Units.feetToMeters(wheelDiameter);
 //            if(sensorIndex == 0)
@@ -316,11 +334,14 @@ public class DriveTrain extends SubsystemBase {
         }
         SmartDashboardTab.putNumber("DriveTrain", "Left Voltage", leftVoltage);
         SmartDashboardTab.putNumber("DriveTrain", "Right Voltage", rightVoltage);
-        if (joystickCorrector == null) {   
-            setMotorPercentOutput(leftVoltage / batteryVoltage, rightVoltage / batteryVoltage);
-        } else {
-            setMotorPercentOutput(leftVoltage / batteryVoltage + joystickCorrector.getAsDouble(), rightVoltage / batteryVoltage - joystickCorrector.getAsDouble());
-        }
+
+        driveMotors[0].setVoltage(leftVoltage);
+        driveMotors[2].setVoltage(rightVoltage);
+    }
+
+    public void setSpeeds(double leftSpeed, double rightSpeed) {
+        driveMotors[0].getPIDController().setReference(leftSpeed * 60 / Constants.DriveConstants.kEncoderDistancePerPulse, ControlType.kSmartVelocity, 0 , feedforward.calculate(leftSpeed));
+        driveMotors[2].getPIDController().setReference(rightSpeed * 60 / Constants.DriveConstants.kEncoderDistancePerPulse, ControlType.kSmartVelocity, 0 , feedforward.calculate(rightSpeed));
     }
 
     private void setMotorPercentOutput(double leftOutput, double rightOutput) {
@@ -384,8 +405,8 @@ public class DriveTrain extends SubsystemBase {
 
         if(RobotBase.isReal()) {
 //             getVelocity() returns values in RPM. Need to convert value to RPS
-            leftMetersPerSecond = 0;//(encoders[0].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
-            rightMetersPerSecond = 0;//(encoders[2].getVelocity() / 60.0) * gearRatio * Math.PI * Units.feetToMeters(wheelDiameter);
+            leftMetersPerSecond = (encoders[0].getVelocity() / 60.0) * Constants.DriveConstants.kEncoderDistancePerPulse;
+            rightMetersPerSecond = (encoders[2].getVelocity() / 60.0) * Constants.DriveConstants.kEncoderDistancePerPulse;
         } else {
             // This is apparently causing issues to the sim where the robot does not fully reach the endpoint. My assumption
             // at the moment is that we need to re-characterize the drivetrain to get new values. I believe David noticed this

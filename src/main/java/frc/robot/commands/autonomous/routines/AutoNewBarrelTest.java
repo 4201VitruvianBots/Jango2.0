@@ -82,7 +82,7 @@ public class AutoNewBarrelTest extends CommandBase {
                     List.of(),
                     endPoints[index],
                     configA);
-                command = TrajectoryUtils.generateRamseteCommand(m_driveTrain, trajectory);
+                command = TrajectoryUtils.generateVitruvianRamseteCommand(m_driveTrain, trajectory);
                 command.initialize();
         }
 
@@ -108,7 +108,7 @@ public class AutoNewBarrelTest extends CommandBase {
                 List.of(),
                 endPoints[index],
                 configA);
-            command = TrajectoryUtils.generateRamseteCommand(m_driveTrain, trajectory);
+            command = TrajectoryUtils.generateVitruvianRamseteCommand(m_driveTrain, trajectory);
             command.initialize();
         }
 

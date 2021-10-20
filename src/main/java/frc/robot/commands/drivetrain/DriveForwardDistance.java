@@ -47,7 +47,7 @@ public class DriveForwardDistance extends SequentialCommandGroup {
         endPosition,
         configA);
         
-        var driveForwardCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, trajectory);
+        var driveForwardCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, trajectory);
 
         addCommands(
                 new SetDriveShifters(driveTrain, Constants.DriveConstants.inSlowGear),

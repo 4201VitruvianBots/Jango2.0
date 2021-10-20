@@ -180,7 +180,7 @@ public class RobotContainer {
 //            m_powercells[i] = new Powercell("PowerCell_" + i);
 
         //m_FieldSim = new FieldSim(m_driveTrain, m_turret, m_shooter);
-
+        
         if(RobotBase.isReal()) {
             m_driveTrain.setDefaultCommand(new SetTankDrive(m_driveTrain,
                     () -> leftJoystick.getRawAxis(1),
@@ -294,7 +294,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new DriveForwardDistance(m_driveTrain, m_FieldSim, 2);
+        return new DriveForwardDistance(m_driveTrain, m_FieldSim, Units.feetToMeters(10));
         /*switch (selectedSkillsChallenge) {
             case AUTO_NAV_BARREL:
                 return new AutoNavBarrel(m_driveTrain, m_FieldSim);

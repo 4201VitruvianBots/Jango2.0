@@ -33,14 +33,14 @@ public class DriveStraight extends SequentialCommandGroup {
                                                                             endPosition,
                                                                             config);
 
-        var driveStraightCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, driveStraight);
+        var driveStraightCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, driveStraight);
 
         Pose2d position2 = new Pose2d(Units.feetToMeters(45),3, new Rotation2d(Units.degreesToRadians(-90)));
         Trajectory splineTrajectory = TrajectoryGenerator.generateTrajectory(endPosition,
                 List.of(),
                 position2,
                 config);
-        var spline = TrajectoryUtils.generateRamseteCommand(driveTrain, splineTrajectory);
+        var spline = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, splineTrajectory);
 
         Pose2d blueTrenchIntakePos = new Pose2d(10.049316,7.166328, new  Rotation2d(Units.degreesToRadians(-55)));
 
@@ -52,7 +52,7 @@ public class DriveStraight extends SequentialCommandGroup {
                 config);
 
 
-        var crossoverCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, crossoverTrajectory);
+        var crossoverCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, crossoverTrajectory);
 
         addCommands(new SetOdometry(driveTrain, fieldSim, initPosition),
                     new SetDriveShifters(driveTrain, true),

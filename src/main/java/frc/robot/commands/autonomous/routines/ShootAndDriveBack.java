@@ -27,7 +27,7 @@ public class ShootAndDriveBack extends SequentialCommandGroup {
         ArrayList<Pose2d> path = new ArrayList<>();
         path.add(new Pose2d(0, 0, new Rotation2d()));
         path.add(new Pose2d(Units.feetToMeters(- 5), 0, new Rotation2d()));
-        var driveBackwards = TrajectoryUtils.generateRamseteCommand(driveTrain, path, config);
+        var driveBackwards = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, path, config);
 
         addCommands(
                 new ResetOdometry(driveTrain),

@@ -80,7 +80,7 @@ public class OpRoutineRed extends SequentialCommandGroup {
                 blueTrenchIntakePosA,
                 configA);
 
-        var startToBlueTrench = TrajectoryUtils.generateRamseteCommand(driveTrain, simpleReversePath);
+        var startToBlueTrench = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, simpleReversePath);
 
         TrajectoryConfig turnTrajectoryConfig = new TrajectoryConfig(Units.feetToMeters(7), Units.feetToMeters(40));
         turnTrajectoryConfig.setReversed(false);
@@ -92,7 +92,7 @@ public class OpRoutineRed extends SequentialCommandGroup {
                 midPoint,
                 turnTrajectoryConfig);
 
-        var crossoverCommandA = TrajectoryUtils.generateRamseteCommand(driveTrain, crossoverTrajectoryA);
+        var crossoverCommandA = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, crossoverTrajectoryA);
 
         TrajectoryConfig driveStraghtTrajectoryConfig = new TrajectoryConfig(Units.feetToMeters(8), Units.feetToMeters(40));
         driveStraghtTrajectoryConfig.setReversed(false);
@@ -103,7 +103,7 @@ public class OpRoutineRed extends SequentialCommandGroup {
                 crossoverStopPos,
                 driveStraghtTrajectoryConfig);
 
-        var crossoverCommandB = TrajectoryUtils.generateRamseteCommand(driveTrain, crossoverTrajectoryB);
+        var crossoverCommandB = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, crossoverTrajectoryB);
 
         driveStraghtTrajectoryConfig.setReversed(true);
         driveStraghtTrajectoryConfig.setStartVelocity(0);
@@ -112,7 +112,7 @@ public class OpRoutineRed extends SequentialCommandGroup {
                 redTrenchIntakePosB,
                 driveStraghtTrajectoryConfig);
 
-        var redTrenchIntakeCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, redTrenchIntakeTrajectory);
+        var redTrenchIntakeCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, redTrenchIntakeTrajectory);
 
         turnTrajectoryConfig.setReversed(true);
         turnTrajectoryConfig.addConstraint(new CentripetalAccelerationConstraint(0.75));
@@ -123,7 +123,7 @@ public class OpRoutineRed extends SequentialCommandGroup {
                 redCenterIntakePosB,
                 turnTrajectoryConfig);
 
-        var redCenterIntakeCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, redCenterIntakeTrajectory);
+        var redCenterIntakeCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, redCenterIntakeTrajectory);
 
 
         addCommands(

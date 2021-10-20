@@ -42,7 +42,7 @@ public class DriveBackwardDistance extends SequentialCommandGroup {
         ArrayList<Pose2d> driveBackwardPath = new ArrayList();
         driveBackwardPath.add(startPosition);
         driveBackwardPath.add(endPosition);
-        var driveBackwardCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, driveBackwardPath, configA);
+        var driveBackwardCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, driveBackwardPath, configA);
 
         addCommands(
                 new SetDriveShifters(driveTrain, Constants.DriveConstants.inSlowGear),

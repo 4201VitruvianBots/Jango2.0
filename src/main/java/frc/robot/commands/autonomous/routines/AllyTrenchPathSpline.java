@@ -45,7 +45,7 @@ public class AllyTrenchPathSpline extends SequentialCommandGroup {
         ArrayList<Pose2d> startToTrenchPath = new ArrayList();
         startToTrenchPath.add(startPosition);
         startToTrenchPath.add(new Pose2d(Units.inchesToMeters(276), 7.5, new Rotation2d(Units.degreesToRadians(180))));
-        var startToTrenchCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, startToTrenchPath, configA);
+        var startToTrenchCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, startToTrenchPath, configA);
 
         Pose2d midPoint = new Pose2d(Units.feetToMeters(-13), 0, new Rotation2d(0));
         var configB = new TrajectoryConfig(Units.feetToMeters(6), Units.feetToMeters(4));
@@ -58,7 +58,7 @@ public class AllyTrenchPathSpline extends SequentialCommandGroup {
         ArrayList<Pose2d> trenchToShootPath = new ArrayList();
         trenchToShootPath.add(new Pose2d(Units.inchesToMeters(276), 7.5, new Rotation2d(Units.degreesToRadians(180))));
         trenchToShootPath.add(new Pose2d(Units.inchesToMeters(145), 5.9, new Rotation2d(Units.degreesToRadians(180))));
-        var trenchToShootCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, trenchToShootPath, configB);
+        var trenchToShootCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, trenchToShootPath, configB);
 
         if(RobotBase.isReal())
             addCommands(

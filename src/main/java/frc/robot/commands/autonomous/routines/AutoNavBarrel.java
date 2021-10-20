@@ -80,7 +80,7 @@ public class AutoNavBarrel extends SequentialCommandGroup {
                 List.of(),
                 waypoints[i + 1],
                 configA);
-            var command = TrajectoryUtils.generateRamseteCommand(driveTrain, trajectory);
+            var command = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, trajectory);
             addCommands(command);
         }
     }

@@ -105,22 +105,25 @@ public final class Constants {
 
         // Example values only -- use what's on your physical robot!
         public static final DCMotor kDriveGearbox = DCMotor.getFalcon500(2);
-        public static final double kDriveGearingLow = 7.49;
+        public static final double kDriveGearingLow = 5.0;
         public static final double kDriveGearingHigh = 14.14;
 
 
         public static final int kMagEncoderCPR = 4096;
-        public static final int kFalconEncoderCPR = 2048;
+        public static final int kNEOEncoderCPR = 1;
         public static final double kWheelDiameterMeters = Units.feetToMeters(0.5);
-        public static final double kEncoderDistancePerPulseLow =
+        public static final double kEncoderDistancePerPulse =
                 // Encoders are not on the wheel shaft for Falcons, so need to multiply by gear ratio
-                (kWheelDiameterMeters * Math.PI) / (double) kFalconEncoderCPR * kDriveGearingLow;
-        public static final double kEncoderDistancePerPulseHigh =
-                // Encoders are not on the wheel shaft for Falcons, so need to multiply by gear ratio
-                (kWheelDiameterMeters * Math.PI) / (double) kFalconEncoderCPR * kDriveGearingLow;
-        public static final double kEncoderDistancePerPulseSim =
-                // Assumes the encoders are directly mounted on the wheel shafts
-                (kWheelDiameterMeters * Math.PI) / (double) kMagEncoderCPR * kDriveGearingHigh;
+                (kWheelDiameterMeters * Math.PI) / (double) kNEOEncoderCPR * kDriveGearingLow;
+        // public static final double kEncoderDistancePerPulseHigh =
+        //         // Encoders are not on the wheel shaft for Falcons, so need to multiply by gear ratio
+        //         (kWheelDiameterMeters * Math.PI) / (double) kFalconEncoderCPR * kDriveGearingLow;
+        // public static final double kEncoderDistancePerPulseSim =
+        //         // Assumes the encoders are directly mounted on the wheel shafts
+        //         (kWheelDiameterMeters * Math.PI) / (double) kMagEncoderCPR * kDriveGearingHigh;
+
+        public static final double maxVelocity = 300.0;
+        public static final double maxAcceleration = 400.0;
 
         public static final boolean kGyroReversed = true;
 
@@ -131,9 +134,9 @@ public final class Constants {
         // for *your* robot's drive.
         // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
         // values for your robot.
-        public static final double ksVolts = 0.675;//inSlowGear ? 0.683 : 0.81;
-        public static final double kvVoltSecondsPerMeter = 3.21;//inSlowGear ? 3.19 : 1.74;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.256;//inSlowGear ? 0.227 : 0.301;
+        public static final double ksVolts = 0.13598;
+        public static final double kvVoltSecondsPerMeter = 0.1247;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.044742;
 
         // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
         // These characterization values MUST be determined either experimentally or theoretically

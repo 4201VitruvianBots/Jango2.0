@@ -90,7 +90,7 @@ public class AutoNewBounceTest extends CommandBase {
                     List.of(),
                     endPoints[index],
                     configA);
-                command = TrajectoryUtils.generateRamseteCommand(m_driveTrain, trajectory);
+                command = TrajectoryUtils.generateVitruvianRamseteCommand(m_driveTrain, trajectory);
                 command.initialize();
         }
 
@@ -119,7 +119,7 @@ public class AutoNewBounceTest extends CommandBase {
                 List.of(),
                 endPoints[index],
                 configA);
-            command = TrajectoryUtils.generateRamseteCommand(m_driveTrain, trajectory);
+            command = TrajectoryUtils.generateVitruvianRamseteCommand(m_driveTrain, trajectory);
             command.initialize();
         }
 

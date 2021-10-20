@@ -69,7 +69,7 @@ public class TurningTestCommand extends SequentialCommandGroup { // Used for ini
                 List.of(),
                 waypoints[i + 1],
                 configA);
-            var command = TrajectoryUtils.generateRamseteCommand(driveTrain, trajectory);
+            var command = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, trajectory);
             addCommands(command);
         }
 

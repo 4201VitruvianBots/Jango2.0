@@ -39,7 +39,7 @@ public class AllyTrenchPathStraight extends SequentialCommandGroup {
         ArrayList<Pose2d> startToTrenchPath = new ArrayList();
         startToTrenchPath.add(new Pose2d(0, 0, new Rotation2d(0)));
         startToTrenchPath.add(new Pose2d(6, 6, new Rotation2d(0)));
-        var startToTrenchCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, startToTrenchPath, configA);
+        var startToTrenchCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, startToTrenchPath, configA);
 
         var configB = new TrajectoryConfig(Units.feetToMeters(6), Units.feetToMeters(10));
         configB.setReversed(false);
@@ -50,7 +50,7 @@ public class AllyTrenchPathStraight extends SequentialCommandGroup {
         trenchToShootPath.add(new Pose2d(0, 0, new Rotation2d(0)));
         trenchToShootPath.add(new Pose2d(6, 6, new Rotation2d(0)));
 
-        var trenchToShootCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, trenchToShootPath, configB);
+        var trenchToShootCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, trenchToShootPath, configB);
 
         addCommands(
                 new ResetOdometry(driveTrain),

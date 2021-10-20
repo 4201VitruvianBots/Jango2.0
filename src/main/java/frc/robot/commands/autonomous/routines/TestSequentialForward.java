@@ -26,8 +26,8 @@ public class TestSequentialForward extends SequentialCommandGroup {
         pathB.add(new Pose2d(Units.feetToMeters(5), Units.feetToMeters(- 5), new Rotation2d(Units.degreesToRadians(- 90))));
         pathB.add(new Pose2d(Units.feetToMeters(0), Units.feetToMeters(- 10), new Rotation2d(Units.degreesToRadians(- 180))));
 
-        var trajectoryCommandA = TrajectoryUtils.generateRamseteCommand(driveTrain, pathA, startConfig);
-        var trajectoryCommandB = TrajectoryUtils.generateRamseteCommand(driveTrain, pathB, secondPathConfig);
+        var trajectoryCommandA = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, pathA, startConfig);
+        var trajectoryCommandB = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, pathB, secondPathConfig);
         addCommands(new ResetOdometry(driveTrain),
                 trajectoryCommandA,
                 new ResetOdometry(driveTrain),

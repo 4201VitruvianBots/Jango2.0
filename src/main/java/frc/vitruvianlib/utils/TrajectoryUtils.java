@@ -44,13 +44,13 @@ public class TrajectoryUtils {
         return trajectoryPoints;
     }
 
-    public static VitruvianRamseteCommand generateRamseteCommand(DriveTrain driveTrain, ArrayList<Pose2d> path, TrajectoryConfig config) {
+    public static VitruvianRamseteCommand generateVitruvianRamseteCommand(DriveTrain driveTrain, ArrayList<Pose2d> path, TrajectoryConfig config) {
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(path, config);
 
-        return generateRamseteCommand(driveTrain, trajectory);
+        return generateVitruvianRamseteCommand(driveTrain, trajectory);
     }
 
-    public static VitruvianRamseteCommand generateRamseteCommand(DriveTrain driveTrain, Trajectory trajectory) {
+    public static VitruvianRamseteCommand generateVitruvianRamseteCommand(DriveTrain driveTrain, Trajectory trajectory) {
 
         VitruvianRamseteCommand ramseteCommand = new VitruvianRamseteCommand(
                 trajectory,
@@ -65,5 +65,17 @@ public class TrajectoryUtils {
                 driveTrain
         );
         return ramseteCommand;
+    }
+
+    public static RamseteCommand generateRamseteCommand(DriveTrain driveTrain, Trajectory trajectory) {
+        RamseteCommand ramseteCommand = new RamseteCommand(
+            trajectory,
+            driveTrain::getRobotPose,
+            new RamseteController(),
+            driveTrain.getDriveTrainKinematics(),
+            driveTrain::setSpeeds,
+            driveTrain
+    );
+    return ramseteCommand;
     }
 }

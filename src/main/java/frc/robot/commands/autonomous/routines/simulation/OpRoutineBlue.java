@@ -45,7 +45,7 @@ public class OpRoutineBlue extends SequentialCommandGroup {
         ArrayList<Pose2d> startToTrenchPath = new ArrayList();
         startToTrenchPath.add(startPosition);
         startToTrenchPath.add(redTrenchIntakePos);
-        var startToRedTrench = TrajectoryUtils.generateRamseteCommand(driveTrain, startToTrenchPath, configA);
+        var startToRedTrench = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, startToTrenchPath, configA);
 
         var configB = new TrajectoryConfig(Units.feetToMeters(20), Units.feetToMeters(20));
         configB.setReversed(false);
@@ -57,7 +57,7 @@ public class OpRoutineBlue extends SequentialCommandGroup {
         ArrayList<Pose2d> trenchToShootPath = new ArrayList();
         startToTrenchPath.add(redTrenchIntakePos);
 //        Pose2d crossoverStopPos = new Pose2d(4.786788,7.268511, new  Rotation2d(Units.degreesToRadians(90)));
-        var trenchToShootCommand = TrajectoryUtils.generateRamseteCommand(driveTrain, trenchToShootPath, configB);
+        var trenchToShootCommand = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, trenchToShootPath, configB);
 
 
         addCommands(

@@ -73,7 +73,7 @@ public class LightspeedCircuit extends SequentialCommandGroup {
                 configA);
 
 
-            var command = TrajectoryUtils.generateRamseteCommand(driveTrain, trajectory);
+            var command = TrajectoryUtils.generateVitruvianRamseteCommand(driveTrain, trajectory);
             addCommands(command);
         }
     }
